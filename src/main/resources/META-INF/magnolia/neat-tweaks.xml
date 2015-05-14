@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module SYSTEM "module.dtd" >
+<module>
+  <name>neat-tweaks</name>
+  <displayName>${project.name}</displayName>
+  <description>${project.description}</description>
+  <class>com.neatresults.NeatTweaks</class>
+  <versionHandler>com.neatresults.setup.NeatTweaksVersionHandler</versionHandler>
+  <version>${project.version}</version>
+
+  <components>
+    <id>subapp</id>
+  </components>
+
+  <dependencies>
+    <dependency>
+      <name>core</name>
+      <version>5.3.5/*</version>
+    </dependency>
+  <!-- Add other dependencies here, e.g the standard-templating-kit, or the multisite module with the enterprise edition. -->
+    <dependency>
+      <name>magnolia-imaging</name>
+      <version>1.0/*</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <name>standard-templating-kit</name>
+      <version>2.7/*</version>
+      <optional>true</optional>
+    </dependency>
+  <!--
+    <dependency>
+      <name>multisite</name>
+      <version>1.0/*</version>
+    </dependency>
+  -->
+  </dependencies>
+</module>
