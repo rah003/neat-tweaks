@@ -8,6 +8,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * TemplatePathConverter converts node path to link to freemarker template and back (mostly just adding/removing .ftl extension).
+ */
 public class TemplatePathConverter extends BaseIdentifierToPathConverter {
 
     private static final Logger log = LoggerFactory.getLogger(TemplatePathConverter.class);

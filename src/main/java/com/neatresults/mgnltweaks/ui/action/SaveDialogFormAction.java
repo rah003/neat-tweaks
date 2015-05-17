@@ -2,6 +2,7 @@ package com.neatresults.mgnltweaks.ui.action;
 
 import static org.apache.jackrabbit.commons.JcrUtils.in;
 import info.magnolia.cms.core.Path;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.ui.api.action.AbstractAction;
 import info.magnolia.ui.api.action.ActionExecutionException;
@@ -13,10 +14,17 @@ import info.magnolia.ui.vaadin.integration.jcr.ModelConstants;
 
 import java.util.Iterator;
 
+import javax.jcr.AccessDeniedException;
+import javax.jcr.ItemExistsException;
 import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
+import javax.jcr.ValueFormatException;
+import javax.jcr.lock.LockException;
+import javax.jcr.nodetype.ConstraintViolationException;
+import javax.jcr.version.VersionException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -71,6 +79,21 @@ public class SaveDialogFormAction extends AbstractAction<Definition> {
                         prop.remove();
                     }
                 }
+                Node actions = node.addNode("actions", NodeTypes.ContentNode.NAME);
+                setAction(node, actions, "commit", "info.magnolia.ui.form.action.SaveFormActionDefinition");
+                setAction(node, actions, "cancel", "info.magnolia.ui.form.action.CancelFormActionDefinition");
+
+                Node tabs = node.addNode("form", NodeTypes.ContentNode.NAME).addNode("tabs", NodeTypes.ContentNode.NAME);
+                for (Node n : in((Iterator<Node>) node.getNodes("tabs*"))) {
+                    if (n.hasProperty("field")) {
+                        String name = n.getProperty("field").getString();
+
+                        Node tab = tabs.addNode(Path.getUniqueLabel(tabs, Path.getValidatedLabel(name)), NodeTypes.ContentNode.NAME);
+                        tab.setProperty("label", StringUtils.capitalize(name));
+                        tab.addNode("fields", NodeTypes.ContentNode.NAME);
+                    }
+                    n.remove();
+                }
                 node.getSession().save();
             } catch (final RepositoryException e) {
                 throw new ActionExecutionException(e);
@@ -78,6 +101,17 @@ public class SaveDialogFormAction extends AbstractAction<Definition> {
             callback.onSuccess(getDefinition().getName());
         } else {
             log.info("Validation error(s) occurred. No save performed.");
+        }
+    }
+
+    private void setAction(final Node node, Node actions, String actionName, String implClass) throws RepositoryException, PathNotFoundException, ValueFormatException, VersionException, LockException, ConstraintViolationException, ItemExistsException, AccessDeniedException {
+        String propName = "default" + StringUtils.capitalize(actionName);
+        if (node.hasProperty(propName)) {
+            Property defaultAction = node.getProperty(propName);
+            if (defaultAction.getBoolean()) {
+                actions.addNode(actionName, NodeTypes.ContentNode.NAME).setProperty("class", implClass);
+            }
+            defaultAction.remove();
         }
     }
 
