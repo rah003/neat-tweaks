@@ -62,7 +62,12 @@ public class SaveConfigPropertyDialogAction extends SaveConfigDialogAction {
                 AbstractJcrNodeAdapter nodeAdapter = (AbstractJcrNodeAdapter) item;
                 try {
                     String propName = (String) nodeAdapter.getItemProperty("name").getValue();
-                    String propValue = (String) nodeAdapter.getItemProperty("value").getValue();
+                    String propValue = null;
+                    if (nodeAdapter.getItemProperty("value") != null) {
+                        propValue = (String) nodeAdapter.getItemProperty("value").getValue();
+                    } else {
+                        propValue = "";
+                    }
                     Node node = nodeAdapter.getJcrItem();
                     node.setProperty(propName, propValue);
                     node.getSession().save();
