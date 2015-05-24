@@ -6,53 +6,108 @@
     <artifactId>magnolia-parent-pom-forge</artifactId>
     <version>29</version>
   </parent>
-  <groupId>com.neatresults</groupId>
-  <artifactId>neat-tweaks</artifactId>
+  <groupId>com.neatresults.mgnltweaks</groupId>
+  <artifactId>neat-tweaks-project</artifactId>
+  <name>neat-tweaks-project (parent pom)</name>
   <version>1.0-SNAPSHOT</version>
-  <packaging>jar</packaging>
-  <name>Neat Tweaks.</name>
-  <description>Module containing some little tweaks to make daily life with Magnolia more pleasant.</description>
+  <packaging>pom</packaging>
+
   <properties>
     <magnoliaVersion>5.3.7</magnoliaVersion>
     <javaVersion>1.7</javaVersion>
   </properties>
 
-  <dependencies>
-    <dependency>
-      <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-module-standard-templating-kit</artifactId>
-      <version>2.8</version>
-    </dependency>
-    <dependency>
-      <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-core</artifactId>
-      <version>${magnoliaVersion}</version>
-    </dependency>
-    <dependency>
-      <groupId>info.magnolia.ui</groupId>
-      <artifactId>magnolia-ui-framework</artifactId>
-      <version>${magnoliaVersion}</version>
-    </dependency>
-    <dependency>
-      <groupId>info.magnolia.ui</groupId>
-      <artifactId>magnolia-ui-dialog</artifactId>
-      <version>${magnoliaVersion}</version>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-      <version>2.5</version>
-      <scope>provided</scope>
-    </dependency>
+  <!-- Fill the following in, so you can use the release plugin -->
+  <scm>
+    <connection>scm:git:http://data.neatresults.com/neat-tweaks</connection>
+    <developerConnection>scm:git:https://data.neatresults.com/neat-tweaks</developerConnection>
+    <url/>
+    <tag>HEAD</tag>
+  </scm>
 
-    <!-- TEST -->
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.11</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
+  <dependencyManagement>
+    <dependencies>
+      <!-- Due to a bug in Maven 2, we have to import info.magnolia:magnolia-project here.
+           It would normally not be needed, since info.magnolia:magnolia-bundle-parent already imports it. (see below)
+           The dependency to info.magnolia:magnolia-project needs to be BEFORE the dependency
+           to info.magnolia:magnolia-bundle-parent, otherwise it doesn't work either.
+           Also note that this is assuming magnolia-project and magnolia-ui-project have the same version number as
+           magnolia-bundle-parent, which not always be true in the future.
+           If you are using Maven 3, you should not need the 2 dependencies below, and all should be well.
+       -->
+      <dependency>
+        <groupId>info.magnolia</groupId>
+        <artifactId>magnolia-project</artifactId>
+        <version>${magnoliaVersion}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>info.magnolia.ui</groupId>
+        <artifactId>magnolia-ui-project</artifactId>
+        <version>${magnoliaVersion}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+
+      <!-- If you want to use the Enterprise Edition, use info.magnolia.eebundle:magnolia-enterprise-bundle-parent.
+      If you are using Maven 2, for the same reasons as above, you will have to keep the dependency to the CE bundle as well. If you are using Maven 3, just keep this one dependency below and remove the above 3. -->
+      <dependency>
+        <groupId>info.magnolia.eebundle</groupId>
+        <artifactId>magnolia-enterprise-bundle-parent</artifactId>
+        <version>${magnoliaVersion}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>info.magnolia</groupId>
+        <artifactId>magnolia-module-standard-templating-kit</artifactId>
+        <version>2.8</version>
+      </dependency>
+      <dependency>
+        <groupId>info.magnolia</groupId>
+        <artifactId>magnolia-core</artifactId>
+        <version>${magnoliaVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>info.magnolia</groupId>
+        <artifactId>magnolia-templating</artifactId>
+        <version>${magnoliaVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>info.magnolia.ui</groupId>
+        <artifactId>magnolia-ui-api</artifactId>
+        <version>${magnoliaVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>info.magnolia.ui</groupId>
+        <artifactId>magnolia-ui-framework</artifactId>
+        <version>${magnoliaVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>info.magnolia.ui</groupId>
+        <artifactId>magnolia-ui-dialog</artifactId>
+        <version>${magnoliaVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>servlet-api</artifactId>
+        <version>2.5</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <!-- TEST -->
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.11</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
 
   <build>
     <plugins>
@@ -67,7 +122,7 @@
       </plugin>
     </plugins>
 
-    <!-- default resources configuration which will filter the module descriptor -->
+    <!-- default resources configuration which will filter your module descriptors -->
     <resources>
       <resource>
         <directory>src/main/resources</directory>
@@ -109,4 +164,8 @@
     </repository>
   </repositories>
 
+  <modules>
+    <module>neat-tweaks-ee-webapp</module>
+    <module>neat-tweaks-module</module>
+  </modules>
 </project>
