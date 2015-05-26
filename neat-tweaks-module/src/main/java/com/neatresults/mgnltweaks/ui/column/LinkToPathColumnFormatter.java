@@ -65,7 +65,7 @@ public class LinkToPathColumnFormatter extends AbstractColumnFormatter<ColumnDef
                 }
                 if ("templateScript".equals(propName) && path.startsWith("/") && path.endsWith(".ftl")) {
                     return createLinkButton("templates", path);
-                } else if ("dialog".equals(propName)) {
+                } else if ("dialog".equals(propName) || "dialogName".equals(propName)) {
                     String title = path;
                     String[] parts = path.split(":");
                     path = "/modules/" + parts[0] + "/dialogs/" + parts[1];
