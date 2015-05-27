@@ -25,6 +25,10 @@
       <type>war</type>
     </dependency>
     <dependency>
+     <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-module-scheduler</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.neatresults</groupId>
       <artifactId>neat-tweaks-module</artifactId>
       <version>1.0-SNAPSHOT</version>
