@@ -1,6 +1,12 @@
 package com.neatresults.setup;
 
 import info.magnolia.module.DefaultModuleVersionHandler;
+import info.magnolia.module.InstallContext;
+import info.magnolia.module.delta.Task;
+import info.magnolia.module.resources.setup.InstallTextResourceTask;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class is optional and lets you manager the versions of your module,
@@ -9,4 +15,10 @@ import info.magnolia.module.DefaultModuleVersionHandler;
  */
 public class NeatTweaksVersionHandler extends DefaultModuleVersionHandler {
 
+    @Override
+    protected List<Task> getExtraInstallTasks(InstallContext installContext) {
+        List<Task> tasks = new ArrayList<Task>(super.getExtraInstallTasks(installContext));
+        tasks.add(new InstallTextResourceTask("/admincentral/custom_theme.css"));
+        return tasks;
+    }
 }
