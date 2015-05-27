@@ -69,7 +69,7 @@ public class SaveConfigPropertyDialogAction extends SaveConfigDialogAction {
                         propValue = "";
                     }
                     Node node = nodeAdapter.getJcrItem();
-                    node.setProperty(propName, propValue);
+                    node.setProperty(propName, propValue == null ? "" : propValue);
                     node.getSession().save();
                 } catch (RepositoryException e) {
                     log.error("Could not save changes to node", e);
