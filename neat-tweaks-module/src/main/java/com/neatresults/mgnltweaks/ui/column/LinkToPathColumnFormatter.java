@@ -151,7 +151,6 @@ public class LinkToPathColumnFormatter extends AbstractColumnFormatter<ColumnDef
                 }
                 if ("browser".equals(subAppName)) {
                     Location location = new BrowserLocation(appName, subAppName, workPath + ":treeview:");
-                    System.out.println("new loc:" + location);
                     adminEventBus.fireEvent(new LocationChangedEvent(location));
                     // FYI: sucks on so many levels, but for some reason vaadin/mangolia will not scroll properly to new location within same browser w/o slight delay introduced by popup window below
                     String message = "window.alert('stand by for beam up to new location')";
