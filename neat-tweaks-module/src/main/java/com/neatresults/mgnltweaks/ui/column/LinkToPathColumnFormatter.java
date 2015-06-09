@@ -76,6 +76,8 @@ public class LinkToPathColumnFormatter extends AbstractColumnFormatter<ColumnDef
                 } catch (RepositoryException e) {
                     log.debug(e.getMessage(), e);
                 }
+                // template ID
+
                 if ("templateScript".equals(propName) && path.startsWith("/") && path.endsWith(".ftl")) {
                     return createLinkButton(path, "templates", StringUtils.substringBefore(path, ".ftl"));
                 } else if ("dialog".equals(propName) || "dialogName".equals(propName)) {
@@ -128,7 +130,7 @@ public class LinkToPathColumnFormatter extends AbstractColumnFormatter<ColumnDef
                 Node node = session.getNode(path);
                 // remove relative segments from path
                 path = node.getPath();
-                return createButton(title, appName, "browser", path, new JcrNodeItemId(node.getIdentifier(), workspace), rootPath);
+                return createButton(title, appName, "helperBrowser", path, new JcrNodeItemId(node.getIdentifier(), workspace), rootPath);
             }
         } catch (RepositoryException e) {
             log.debug(e.getMessage(), e);
