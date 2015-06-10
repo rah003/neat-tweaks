@@ -16,6 +16,10 @@
 
   <dependencies>
     <dependency>
+      <groupId>info.magnolia.ui</groupId>
+      <artifactId>magnolia-ui-widget-editor</artifactId>
+    </dependency>
+    <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-standard-templating-kit</artifactId>
     </dependency>
