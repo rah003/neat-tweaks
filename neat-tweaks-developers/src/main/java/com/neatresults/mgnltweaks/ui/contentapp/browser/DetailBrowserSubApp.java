@@ -23,7 +23,7 @@ import javax.inject.Named;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Detail BrowserSubApp.
+ * Detail BrowserSubApp used to open more instances of browser in the app, just like if they were details.
  */
 public class DetailBrowserSubApp extends BrowserSubApp {
 
