@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE module SYSTEM "module.dtd" >
 <module>
-  <name>neat-tweaks</name>
+  <name>neat-tweaks-editors</name>
   <displayName>${project.name}</displayName>
   <description>${project.description}</description>
-  <class>com.neatresults.NeatTweaks</class>
-  <versionHandler>com.neatresults.setup.NeatTweaksVersionHandler</versionHandler>
+  <versionHandler>com.neatresults.setup.NeatTweaks4EditorsVersionHandler</versionHandler>
   <version>${project.version}</version>
 
   <components>

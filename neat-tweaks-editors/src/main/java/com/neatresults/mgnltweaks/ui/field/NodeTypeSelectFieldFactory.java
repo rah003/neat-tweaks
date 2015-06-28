@@ -53,12 +53,12 @@ public class NodeTypeSelectFieldFactory extends SelectFieldFactory<Definition> {
         try {
             Field registryField = registry.getClass().getDeclaredField("registry");
             registryField.setAccessible(true);
-            RegistryMap<String, DialogDefinitionProvider> registry = (RegistryMap<String, DialogDefinitionProvider>) registryField.get(ddr);
+            RegistryMap<String, DialogDefinitionProvider> registryMap = (RegistryMap<String, DialogDefinitionProvider>) registryField.get(this.registry);
 
-            for (String id : registry.keySet()) {
+            for (String id : registryMap.keySet()) {
 
                 SelectFieldOptionDefinition field = new SelectFieldOptionDefinition();
-                FormDialogDefinition dialogDef = registry.get(id).getDialogDefinition();
+                FormDialogDefinition dialogDef = registryMap.get(id).getDialogDefinition();
                 // directly defined label
                 String label = dialogDef.getLabel();
 

@@ -18,7 +18,7 @@ import java.util.List;
  * by registering "deltas" to maintain the module's configuration, or other type of content.
  * If you don't need this, simply remove the reference to this class in the module descriptor xml.
  */
-public class NeatTweaksVersionHandler extends DefaultModuleVersionHandler {
+public class NeatTweaks4DevelopersVersionHandler extends DefaultModuleVersionHandler {
 
     @Override
     protected List<Task> getExtraInstallTasks(InstallContext installContext) {
