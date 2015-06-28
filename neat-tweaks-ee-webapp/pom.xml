@@ -30,7 +30,12 @@
     </dependency>
     <dependency>
       <groupId>com.neatresults</groupId>
-      <artifactId>neat-tweaks-module</artifactId>
+      <artifactId>neat-tweaks-editors</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>com.neatresults</groupId>
+      <artifactId>neat-tweaks-developers</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
   </dependencies>

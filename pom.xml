@@ -182,7 +182,8 @@
   </repositories>
 
   <modules>
+    <module>neat-tweaks-editors</module>
+    <module>neat-tweaks-developers</module>
     <module>neat-tweaks-ee-webapp</module>
-    <module>neat-tweaks-module</module>
   </modules>
 </project>
