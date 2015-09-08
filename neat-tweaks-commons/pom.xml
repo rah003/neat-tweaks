@@ -7,18 +7,13 @@
     <version>1.0-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-  <groupId>com.neatresults</groupId>
-  <artifactId>neat-tweaks-developers</artifactId>
+  <groupId>com.neatresults.mgnltweaks</groupId>
+  <artifactId>neat-tweaks-commons</artifactId>
   <packaging>jar</packaging>
-  <name>Neat tweaks for developers.</name>
+  <name>Neat tweaks commons</name>
   <description>Module containing some little tweaks to make daily life with Magnolia more pleasant.</description>
 
   <dependencies>
-    <dependency>
-      <groupId>com.neatresults.mgnltweaks</groupId>
-      <artifactId>neat-tweaks-commons</artifactId>
-      <version>1.0-SNAPSHOT</version>
-    </dependency>
     <dependency>
       <groupId>info.magnolia.ui</groupId>
       <artifactId>magnolia-ui-widget-editor</artifactId>

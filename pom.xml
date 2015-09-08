@@ -107,7 +107,7 @@
         <artifactId>magnolia-pages-editor-widget</artifactId>
         <version>${magnoliaVersion}</version>
       </dependency-->
-     
+
       <dependency>
         <groupId>javax.servlet</groupId>
         <artifactId>servlet-api</artifactId>
@@ -182,6 +182,7 @@
   </repositories>
 
   <modules>
+    <module>neat-tweaks-commons</module>
     <module>neat-tweaks-editors</module>
     <module>neat-tweaks-developers</module>
     <module>neat-tweaks-ee-webapp</module>
