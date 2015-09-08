@@ -32,6 +32,11 @@
       <version>1.0/*</version>
       <optional>true</optional>
     </dependency>
+    <dependency>
+      <name>pages</name>
+      <version>1.0/*</version>
+      <optional>true</optional>
+    </dependency>
   <!--
     <dependency>
       <name>multisite</name>
