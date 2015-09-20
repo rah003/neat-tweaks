@@ -4,7 +4,7 @@
   <name>neat-tweaks-developers</name>
   <displayName>${project.name}</displayName>
   <description>${project.description}</description>
-  <versionHandler>com.neatresults.setup.NeatTweaks4DevelopersVersionHandler</versionHandler>
+  <versionHandler>com.neatresults.mgnltweaks.setup.NeatTweaks4DevelopersVersionHandler</versionHandler>
   <version>${project.version}</version>
 
   <components>

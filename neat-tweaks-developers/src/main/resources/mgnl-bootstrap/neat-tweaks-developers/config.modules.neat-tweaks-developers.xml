@@ -3570,7 +3570,7 @@
                 <sv:value>info.magnolia.ui.framework.action.OpenCreateDialogActionDefinition</sv:value>
               </sv:property>
               <sv:property sv:name="dialogName" sv:type="String">
-                <sv:value>neat-tweaks:addContent</sv:value>
+                <sv:value>neat-tweaks-developers:addContent</sv:value>
               </sv:property>
               <sv:property sv:name="icon" sv:type="String">
                 <sv:value>icon-add-node-content</sv:value>
@@ -3655,7 +3655,7 @@
                 <sv:value>info.magnolia.ui.framework.action.OpenCreateDialogActionDefinition</sv:value>
               </sv:property>
               <sv:property sv:name="dialogName" sv:type="String">
-                <sv:value>neat-tweaks:editProperty</sv:value>
+                <sv:value>neat-tweaks-developers:editProperty</sv:value>
               </sv:property>
               <sv:property sv:name="icon" sv:type="String">
                 <sv:value>icon-add-node-data</sv:value>
@@ -4730,7 +4730,7 @@
                 <sv:value>info.magnolia.ui.framework.action.OpenCreateDialogActionDefinition</sv:value>
               </sv:property>
               <sv:property sv:name="dialogName" sv:type="String">
-                <sv:value>neat-tweaks:addTemplate</sv:value>
+                <sv:value>neat-tweaks-developers:addTemplate</sv:value>
               </sv:property>
               <sv:property sv:name="icon" sv:type="String">
                 <sv:value>icon-add-node-content</sv:value>
@@ -4818,7 +4818,7 @@
                 <sv:value>info.magnolia.ui.framework.action.OpenCreateDialogActionDefinition</sv:value>
               </sv:property>
               <sv:property sv:name="dialogName" sv:type="String">
-                <sv:value>neat-tweaks:addDialog</sv:value>
+                <sv:value>neat-tweaks-developers:addDialog</sv:value>
               </sv:property>
               <sv:property sv:name="icon" sv:type="String">
                 <sv:value>icon-add-node-content</sv:value>
@@ -4906,7 +4906,7 @@
                 <sv:value>info.magnolia.ui.framework.action.OpenCreateDialogActionDefinition</sv:value>
               </sv:property>
               <sv:property sv:name="dialogName" sv:type="String">
-                <sv:value>neat-tweaks:addField</sv:value>
+                <sv:value>neat-tweaks-developers:addField</sv:value>
               </sv:property>
               <sv:property sv:name="icon" sv:type="String">
                 <sv:value>icon-add-node-content</sv:value>
@@ -4994,7 +4994,7 @@
                 <sv:value>info.magnolia.ui.framework.action.OpenEditDialogActionDefinition</sv:value>
               </sv:property>
               <sv:property sv:name="dialogName" sv:type="String">
-                <sv:value>neat-tweaks:addRestClient</sv:value>
+                <sv:value>neat-tweaks-developers:addRestClient</sv:value>
               </sv:property>
               <sv:property sv:name="icon" sv:type="String">
                 <sv:value>icon-edit</sv:value>
