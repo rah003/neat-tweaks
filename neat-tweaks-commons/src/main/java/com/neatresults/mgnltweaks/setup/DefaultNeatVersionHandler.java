@@ -23,22 +23,39 @@
  * use neat-tweaks commercially, please contact owner at the address above.
  *
  */
-package com.neatresults.setup;
+package com.neatresults.mgnltweaks.setup;
 
+import info.magnolia.init.MagnoliaConfigurationProperties;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
+import info.magnolia.module.delta.AbstractCondition;
+import info.magnolia.module.delta.Condition;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.resources.setup.InstallTextResourceTask;
+import info.magnolia.objectfactory.Components;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class is optional and lets you manager the versions of your module,
- * by registering "deltas" to maintain the module's configuration, or other type of content.
- * If you don't need this, simply remove the reference to this class in the module descriptor xml.
+ * Version handler for tweaks for editors.
  */
-public class NeatTweaks4EditorsVersionHandler extends DefaultModuleVersionHandler {
+public abstract class DefaultNeatVersionHandler extends DefaultModuleVersionHandler {
+
+    @Override
+    protected List<Condition> getInstallConditions() {
+        List<Condition> conditions = new ArrayList<Condition>(super.getInstallConditions());
+        conditions.add(new AbstractCondition("NeatCentral Theme check",
+                "neatcentral theme must be configured in order to use functionality if this module succesfully. Please edit your magnolia.properties file and set magnolia.ui.vaadin.theme property to value \"neatcentral\" (w/o quotes).") {
+
+            @Override
+            public boolean check(InstallContext installContext) {
+                MagnoliaConfigurationProperties props = Components.getComponent(MagnoliaConfigurationProperties.class);
+                return "neatcentral".equals(props.getProperty("magnolia.ui.vaadin.theme"));
+            }
+        });
+        return conditions;
+    }
 
     @Override
     protected List<Task> getExtraInstallTasks(InstallContext installContext) {
