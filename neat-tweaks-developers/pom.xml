@@ -33,6 +33,10 @@
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-module-groovy</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>info.magnolia</groupId>
       <artifactId>magnolia-templating</artifactId>
     </dependency>
     <dependency>

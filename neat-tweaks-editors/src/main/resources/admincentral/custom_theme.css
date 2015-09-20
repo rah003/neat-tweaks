@@ -61,3 +61,7 @@
     border-radius: 12px;
     margin: 0px 10px 0px 0;
 }
+
+.v-horizontallayout-detail .v-csslayout-detailview .v-panel.v-widget {
+    width:100% !important;
+}

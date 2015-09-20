@@ -101,6 +101,11 @@
         <artifactId>magnolia-ui-widget-editor</artifactId>
         <version>${magnoliaVersion}</version>
       </dependency>
+      <dependency>
+        <groupId>info.magnolia</groupId>
+        <artifactId>magnolia-module-groovy</artifactId>
+        <version>2.3.2</version>
+      </dependency>
       <!--in 5.4 ... dependency>
         <groupId>info.magnolia.pages</groupId>
         <artifactId>magnolia-pages-editor-widget</artifactId>
