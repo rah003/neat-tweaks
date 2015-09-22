@@ -18,18 +18,21 @@ Maven dependency
 -----------------
 ```xml
     <dependency>
-      <groupId>com.neatresults</groupId>
+      <groupId>com.neatresults.mgnltweaks</groupId>
       <artifactId>neat-tweaks-editors</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>1.0.2</version>
     </dependency>
     <dependency>
-      <groupId>com.neatresults</groupId>
+      <groupId>com.neatresults.mgnltweaks</groupId>
       <artifactId>neat-tweaks-developers</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>1.0.2</version>
     </dependency>
 ```
 
 Versions
 -----------------
 Version 1.0.x compatible with Magnolia 5.3.x
+Modules will install and most of the tweaks will also work with MAgnolia 5.4, but full testing have not been performed yet. If you encounter any issues please report them back (ideally with attached patch :D ).
+
+In case you want to just try out in existing installation without need to build everything, please download whole bundle and drop it in your WEB-INF/lib folder. Bundle can be found at https://nexus.magnolia-cms.com/content/repositories/magnolia.forge.releases/com/neatresults/mgnltweaks/neat-tweaks-bundle/1.0.2/neat-tweaks-bundle-1.0.2.zip
 
