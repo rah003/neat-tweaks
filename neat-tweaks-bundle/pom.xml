@@ -1,0 +1,52 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.neatresults.mgnltweaks</groupId>
+    <artifactId>neat-tweaks-project</artifactId>
+    <version>1.0.2-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+  <artifactId>neat-tweaks-bundle</artifactId>
+  <name>Neat tweaks bundle</name>
+  <description>Bundle containing all tweaks to make daily life with Magnolia more pleasant.</description>
+  <packaging>pom</packaging>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <appendAssemblyId>false</appendAssemblyId>
+        </configuration>
+      </plugin>
+    </plugins>
+    <!-- default resources configuration which will filter your module descriptors -->
+    <resources>
+      <resource>
+        <filtering>true</filtering>
+        <directory>src/main/resources</directory>
+        <includes>
+          <include>**/*</include>
+        </includes>
+      </resource>
+    </resources>
+  </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.neatresults.mgnltweaks</groupId>
+      <artifactId>neat-tweaks-commons</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.neatresults.mgnltweaks</groupId>
+      <artifactId>neat-tweaks-editors</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.neatresults.mgnltweaks</groupId>
+      <artifactId>neat-tweaks-developers</artifactId>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
+</project>

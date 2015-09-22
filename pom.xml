@@ -27,6 +27,21 @@
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>com.neatresults.mgnltweaks</groupId>
+        <artifactId>neat-tweaks-commons</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.neatresults.mgnltweaks</groupId>
+        <artifactId>neat-tweaks-editors</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.neatresults.mgnltweaks</groupId>
+        <artifactId>neat-tweaks-developers</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <!-- Due to a bug in Maven 2, we have to import info.magnolia:magnolia-project here.
            It would normally not be needed, since info.magnolia:magnolia-bundle-parent already imports it. (see below)
            The dependency to info.magnolia:magnolia-project needs to be BEFORE the dependency
@@ -65,51 +80,61 @@
         <groupId>info.magnolia</groupId>
         <artifactId>magnolia-module-standard-templating-kit</artifactId>
         <version>${stkVersion}</version>
+        <scope>provided</scope>
       </dependency-->
       <dependency>
         <groupId>info.magnolia</groupId>
         <artifactId>magnolia-module-scheduler</artifactId>
         <version>2.1.2</version>
+        <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>info.magnolia</groupId>
         <artifactId>magnolia-core</artifactId>
         <version>${magnoliaVersion}</version>
+        <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>info.magnolia</groupId>
         <artifactId>magnolia-templating</artifactId>
         <version>${magnoliaVersion}</version>
+        <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>info.magnolia.ui</groupId>
         <artifactId>magnolia-ui-api</artifactId>
         <version>${magnoliaVersion}</version>
+        <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>info.magnolia.ui</groupId>
         <artifactId>magnolia-ui-framework</artifactId>
         <version>${magnoliaVersion}</version>
+        <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>info.magnolia.ui</groupId>
         <artifactId>magnolia-ui-dialog</artifactId>
         <version>${magnoliaVersion}</version>
+        <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>info.magnolia.ui</groupId>
         <artifactId>magnolia-ui-widget-editor</artifactId>
         <version>${magnoliaVersion}</version>
+        <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>info.magnolia</groupId>
         <artifactId>magnolia-module-groovy</artifactId>
         <version>2.3.2</version>
+        <scope>provided</scope>
       </dependency>
       <!--in 5.4 ... dependency>
         <groupId>info.magnolia.pages</groupId>
         <artifactId>magnolia-pages-editor-widget</artifactId>
         <version>${magnoliaVersion}</version>
+        <scope>provided</scope>
       </dependency-->
 
       <dependency>
@@ -189,6 +214,6 @@
     <module>neat-tweaks-commons</module>
     <module>neat-tweaks-editors</module>
     <module>neat-tweaks-developers</module>
-    <module>neat-tweaks-ee-webapp</module>
+    <module>neat-tweaks-bundle</module>
   </modules>
 </project>

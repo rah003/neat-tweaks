@@ -1,0 +1,8 @@
+Neat Tweaks Bundle ${project.version}
+Copyright 2015 NeatResults s.r.o.
+
+This product includes/uses software(s) developed by 'NeatResults s.r.o.' (http://www.neatresults.com)
+  - Neat tweaks commons
+  - Neat tweaks for developers.
+  - Neat tweaks for editors.
+
