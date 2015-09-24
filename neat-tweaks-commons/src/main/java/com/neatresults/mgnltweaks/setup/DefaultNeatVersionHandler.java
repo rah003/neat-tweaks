@@ -25,7 +25,9 @@
  */
 package com.neatresults.mgnltweaks.setup;
 
+import info.magnolia.cms.license.LicenseFileExtractor;
 import info.magnolia.init.MagnoliaConfigurationProperties;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AbstractCondition;
@@ -36,6 +38,9 @@ import info.magnolia.objectfactory.Components;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 /**
  * Version handler for tweaks for editors.
@@ -60,7 +65,18 @@ public abstract class DefaultNeatVersionHandler extends DefaultModuleVersionHand
     @Override
     protected List<Task> getExtraInstallTasks(InstallContext installContext) {
         List<Task> tasks = new ArrayList<Task>(super.getExtraInstallTasks(installContext));
-        tasks.add(new InstallTextResourceTask("/admincentral/custom_theme.css"));
+        if (!LicenseFileExtractor.getInstance().get(LicenseFileExtractor.VERSION_NUMBER).startsWith("5.4")) {
+            tasks.add(new InstallTextResourceTask("/ui-admincentral/neat_theme.css"));
+        } else {
+            try {
+                Session session = installContext.getJCRSession("resources");
+                session.getRootNode().addNode("admincentral", NodeTypes.Folder.NAME);
+                session.save();
+            } catch (RepositoryException e) {
+                e.printStackTrace();
+                // ignore
+            }
+        }
         return tasks;
     }
 }
