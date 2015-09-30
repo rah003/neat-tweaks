@@ -56,7 +56,8 @@ public abstract class DefaultNeatVersionHandler extends DefaultModuleVersionHand
             @Override
             public boolean check(InstallContext installContext) {
                 MagnoliaConfigurationProperties props = Components.getComponent(MagnoliaConfigurationProperties.class);
-                return "neatcentral".equals(props.getProperty("magnolia.ui.vaadin.theme"));
+                String theme = props.getProperty("magnolia.ui.vaadin.theme");
+                return "neatcentral53".equals(theme) || "neatcentral54".equals(theme);
             }
         });
         return conditions;
