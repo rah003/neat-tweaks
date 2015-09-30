@@ -36,6 +36,7 @@ import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.module.templatingkit.sites.Site;
 import info.magnolia.module.templatingkit.sites.SiteManager;
+import info.magnolia.module.templatingkit.templates.pages.STKPage;
 import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.template.AreaDefinition;
 import info.magnolia.rendering.template.ComponentAvailability;
@@ -176,9 +177,15 @@ public class ComponentTemplateSelectFieldFactory extends SelectFieldFactory<Defi
                 Node component = ((JcrNodeAdapter) currentComponent).getJcrItem();
                 Node parentArea = NodeUtil.getNearestAncestorOfType(component, NodeTypes.Area.NAME);
                 String areaName = parentArea.getName();
-                Map<String, AreaDefinition> areaHierarchy = getAreaHierarchy(parentArea);
+                Map<String, TemplateDefinition> areaHierarchy = getAreaHierarchy(parentArea);
 
-                return areaHierarchy.get(areaName).getAvailableComponents();
+                TemplateDefinition componentPageOrAreaDefinition = areaHierarchy.get(areaName);
+                if (componentPageOrAreaDefinition instanceof AreaDefinition) {
+                    return ((AreaDefinition) componentPageOrAreaDefinition).getAvailableComponents();
+                } else if (componentPageOrAreaDefinition instanceof STKPage) {
+                    log.warn("found definition that is of type STKPage when looking for component availability");
+                }
+                return null;
             } catch (RepositoryException e) {
                 // failed to access repo :(
                 log.error("Failed to locate template id for {}", currentComponent, e);
@@ -190,8 +197,8 @@ public class ComponentTemplateSelectFieldFactory extends SelectFieldFactory<Defi
         return null;
     }
 
-    private Map<String, AreaDefinition> getAreaHierarchy(Node parentArea) throws RepositoryException, RegistrationException {
-        Map<String, AreaDefinition> areaHierarchy = new LinkedHashMap<String, AreaDefinition>();
+    private Map<String, TemplateDefinition> getAreaHierarchy(Node parentArea) throws RepositoryException, RegistrationException {
+        Map<String, TemplateDefinition> areaHierarchy = new LinkedHashMap<String, TemplateDefinition>();
         List<String> areaNamesHierarchy = new ArrayList<String> ();
         Node parentParentArea = parentArea;
         while (parentParentArea != null) {
@@ -210,51 +217,49 @@ public class ComponentTemplateSelectFieldFactory extends SelectFieldFactory<Defi
         Node componentOrArea = parentPage;
         while (iter.hasPrevious()) {
             String name = iter.previous();
-            componentOrArea = componentOrArea.getNode(name);
+            // subnode component is typically indication of having area type single
+            if (!componentOrArea.hasNode(name) && (componentOrArea.hasNode("component") || (templateDef instanceof AreaDefinition && "single".equals(((AreaDefinition) templateDef).getType())))) {
+                componentOrArea = componentOrArea.getNode("component/" + name);
+                // so we know component is single, and we neeed to look if it has any sub areas
+                String id = componentOrArea.getParent().getProperty(NodeTypes.Renderable.TEMPLATE).getString();
+                TemplateDefinition componentDef = registry.getTemplateDefinition(id);
+                if (componentDef != null) {
+                    templateDef = componentDef;
+                }
+            } else {
+                componentOrArea = componentOrArea.getNode(name);
+            }
             // do we really need to merge here already?
             AreaDefinition area = templateDef.getAreas().get(name);
             if (area != null) {
                 AreaDefinition areaDef = (AreaDefinition) mergeDefinition(area);
-
-                if ("single".equals(areaDef.getType())) {
-                    System.out.println(name);
-                    System.out.println(areaDef.getId());
-                    System.out.println(componentOrArea.hasNode("component"));
-                    // from the area node get child called "component"
-                    // from the component, get prop mgnl:template
-                    // find component w/ matching id
-                    // find if it has areas defined or if it is simply just component
-                }
-                // // what now? :D
-                // areaDef.getAvailableComponents()
-                // areaDef.getName()
-                // //if component
-                // .getParent().getParent().getPrimaryNodeType().getName()
-                // // get name
-                // ((JcrNodeAdapter) currentComponent).getJcrItem().getParent().getParent().getProperty("mgnl:template").getString()
-                // // get definition for component
-                // // and??
-                // }
-
+                templateDef = areaDef;
             } else {
-                for (Entry<String, AreaDefinition> tempAreaEntry : templateDef.getAreas().entrySet()) {
-                    AreaDefinition tempArea = tempAreaEntry.getValue();
-                    AreaDefinition maybeHit = tempArea.getAreas().get(name);
-                    if (maybeHit != null) {
-                        areaHierarchy.put(tempAreaEntry.getKey(), tempAreaEntry.getValue());
-                        templateDef = maybeHit;
+                AreaDefinition maybeHit = templateDef.getAreas().get(name);
+                if (maybeHit != null) {
+                    areaHierarchy.put(name, maybeHit);
+                    templateDef = maybeHit;
+                } else {
+                    // get subareas of the area? what the hack was i thinking when writing this? How does it work anyway?
+                    for (Entry<String, AreaDefinition> tempAreaEntry : templateDef.getAreas().entrySet()) {
+                        AreaDefinition tempArea = tempAreaEntry.getValue();
+                        maybeHit = tempArea.getAreas().get(name);
+                        if (maybeHit != null) {
+                            areaHierarchy.put(tempAreaEntry.getKey(), tempAreaEntry.getValue());
+                            templateDef = maybeHit;
+                        }
                     }
                 }
                 // noComponent area ... how do i read those?
             }
-            areaHierarchy.put(name, (AreaDefinition) templateDef);
+            areaHierarchy.put(name, templateDef);
         }
 
         return areaHierarchy;
     }
 
     private TemplateDefinition mergeDefinition(TemplateDefinition templateDef) {
-        ConfiguredAreaDefinition areaDef = (ConfiguredAreaDefinition) templateDef;
+        // ConfiguredAreaDefinition areaDef = (ConfiguredAreaDefinition) templateDef;
         Site site = siteManager.getAssignedSite(((JcrNodeAdapter) currentComponent).getJcrItem());
         if (site == null) {
             return templateDef;
@@ -262,11 +267,11 @@ public class ComponentTemplateSelectFieldFactory extends SelectFieldFactory<Defi
         if (site.getTemplates().getPrototype() == null) {
             return templateDef;
         }
-        AreaDefinition tempAreaPrototype = site.getTemplates().getPrototype().getArea(areaDef.getName());
+        AreaDefinition tempAreaPrototype = site.getTemplates().getPrototype().getArea(templateDef.getName());
         if (tempAreaPrototype == null) {
             return templateDef;
         }
-        areaDef = BeanMergerUtil.merge(templateDef, tempAreaPrototype);
+        ConfiguredAreaDefinition areaDef = BeanMergerUtil.merge(templateDef, tempAreaPrototype);
         return areaDef;
     }
 
