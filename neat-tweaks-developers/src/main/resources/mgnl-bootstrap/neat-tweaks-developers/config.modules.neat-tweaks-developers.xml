@@ -4467,41 +4467,6 @@
                 </sv:property>
               </sv:node>
             </sv:node>
-            <sv:node sv:name="selectCampaignAction">
-              <sv:property sv:name="jcr:primaryType" sv:type="Name">
-                <sv:value>mgnl:contentNode</sv:value>
-              </sv:property>
-              <sv:property sv:name="jcr:uuid" sv:type="String">
-                <sv:value>e420e85c-252a-4ce2-86e3-1781e288e1e7</sv:value>
-              </sv:property>
-              <sv:property sv:name="extends" sv:type="String">
-                <sv:value>/modules/campaign-manager/actions/selectCampaignAction</sv:value>
-              </sv:property>
-              <sv:property sv:name="jcr:createdBy" sv:type="String">
-                <sv:value>admin</sv:value>
-              </sv:property>
-              <sv:property sv:name="mgnl:activationStatus" sv:type="Boolean">
-                <sv:value>false</sv:value>
-              </sv:property>
-              <sv:property sv:name="mgnl:created" sv:type="Date">
-                <sv:value>2015-05-10T17:47:04.480+02:00</sv:value>
-              </sv:property>
-              <sv:property sv:name="mgnl:createdBy" sv:type="String">
-                <sv:value>superuser</sv:value>
-              </sv:property>
-              <sv:property sv:name="mgnl:lastActivated" sv:type="Date">
-                <sv:value>2015-05-10T17:47:04.611+02:00</sv:value>
-              </sv:property>
-              <sv:property sv:name="mgnl:lastActivatedBy" sv:type="String">
-                <sv:value>superuser</sv:value>
-              </sv:property>
-              <sv:property sv:name="mgnl:lastModified" sv:type="Date">
-                <sv:value>2015-05-12T15:53:46.080+02:00</sv:value>
-              </sv:property>
-              <sv:property sv:name="mgnl:lastModifiedBy" sv:type="String">
-                <sv:value>superuser</sv:value>
-              </sv:property>
-            </sv:node>
             <sv:node sv:name="exportMulti">
               <sv:property sv:name="jcr:primaryType" sv:type="Name">
                 <sv:value>mgnl:contentNode</sv:value>
@@ -7347,41 +7312,6 @@
                         </sv:property>
                         <sv:property sv:name="jcr:uuid" sv:type="String">
                           <sv:value>0b3fa2c5-bf8d-4827-8efd-350cec1a3319</sv:value>
-                        </sv:property>
-                        <sv:property sv:name="jcr:createdBy" sv:type="String">
-                          <sv:value>admin</sv:value>
-                        </sv:property>
-                        <sv:property sv:name="mgnl:activationStatus" sv:type="Boolean">
-                          <sv:value>false</sv:value>
-                        </sv:property>
-                        <sv:property sv:name="mgnl:created" sv:type="Date">
-                          <sv:value>2015-05-10T17:47:04.480+02:00</sv:value>
-                        </sv:property>
-                        <sv:property sv:name="mgnl:createdBy" sv:type="String">
-                          <sv:value>superuser</sv:value>
-                        </sv:property>
-                        <sv:property sv:name="mgnl:lastActivated" sv:type="Date">
-                          <sv:value>2015-05-10T17:47:04.617+02:00</sv:value>
-                        </sv:property>
-                        <sv:property sv:name="mgnl:lastActivatedBy" sv:type="String">
-                          <sv:value>superuser</sv:value>
-                        </sv:property>
-                        <sv:property sv:name="mgnl:lastModified" sv:type="Date">
-                          <sv:value>2015-05-12T15:53:46.080+02:00</sv:value>
-                        </sv:property>
-                        <sv:property sv:name="mgnl:lastModifiedBy" sv:type="String">
-                          <sv:value>superuser</sv:value>
-                        </sv:property>
-                      </sv:node>
-                      <sv:node sv:name="selectCampaignAction">
-                        <sv:property sv:name="jcr:primaryType" sv:type="Name">
-                          <sv:value>mgnl:contentNode</sv:value>
-                        </sv:property>
-                        <sv:property sv:name="jcr:mixinTypes" sv:type="Name" sv:multiple="true">
-                          <sv:value>mix:lockable</sv:value>
-                        </sv:property>
-                        <sv:property sv:name="jcr:uuid" sv:type="String">
-                          <sv:value>2fd996f6-00de-4943-aa39-9a7cf6bba4de</sv:value>
                         </sv:property>
                         <sv:property sv:name="jcr:createdBy" sv:type="String">
                           <sv:value>admin</sv:value>
