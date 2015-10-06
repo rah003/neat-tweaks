@@ -7,6 +7,8 @@ Neat Tweaks for Developers replaces existing JCR configuration module with somet
 Neat Tweaks for Editors changes default theme of Magnolia to give editors more freedom when working with Magnolia.
 You can use one or both of the modules.
 
+If you want to see tweaks delivered by module at work, please have a look at [Neat Tweaks for Developers](https://www.youtube.com/playlist?list=PLiOUpSP0-2XA_s1cO6Ao_u46-qnCIxja4) or [Neat Tweaks for Editors](https://www.youtube.com/playlist?list=PLiOUpSP0-2XA76i00oeyInVkuWW7TN5UT).
+
 License
 -------
 
