@@ -91,14 +91,15 @@ public class AddBookmarkAction extends AbstractAction<Definition> {
             final String path = item.getJcrItem().getPath();
 
             Session session = MgnlContext.getJCRSession("config");
-            Node bar = session.getNode("/modules/neat-tweaks-developers/apps/neatconfiguration/subApps/browser/actionbar/sections/folders/groups/importExportActions/items");
+            Node bar = session.getNode("/modules/neat-tweaks-developers/apps/neatconfiguration/subApps/browser/actionbar/sections/folders/groups/bookmarksActions/items");
             String name = "bkmk" + StringUtils.capitalize(item.getJcrItem().getName());
             bar.addNode(name, NodeTypes.ContentNode.NAME);
             Node actions = session.getNode("/modules/neat-tweaks-developers/apps/neatconfiguration/subApps/browser/actions");
             Node action = actions.addNode(name, NodeTypes.ContentNode.NAME);
             action.setProperty("extends", "../manageBookmarks");
+            action.setProperty("icon", "icon-favorites");
             action.setProperty("path", path);
-            action.setProperty("label", "Shortcut to " + item.getJcrItem().getName());
+            action.setProperty("label", item.getJcrItem().getName());
             session.save();
             uiContext.openConfirmation(MessageStyleTypeEnum.INFO, "Wanna wait?", "To add a bookmark, one need to refresh the app, to refresh the app, one must kill it. To make this harder, observation kicks in only every 4 seconds so you got to wait for the refresh.",
                     "OK, I'll take a nap", "no way", false, new ConfirmationCallback() {

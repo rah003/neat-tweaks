@@ -68,7 +68,7 @@ public class OpenBookmarkAction extends AbstractAction<Definition> {
 
     @Override
     public void execute() throws ActionExecutionException {
-        String path = StringUtils.defaultIfEmpty(definition.getPath(), "/modules/neat-tweaks-developers/apps/neatconfiguration/subApps/browser/actionbar/sections/folders/groups/importExportActions/items");
+        String path = StringUtils.defaultIfEmpty(definition.getPath(), "/modules/neat-tweaks-developers/apps/neatconfiguration/subApps/browser/actionbar/sections/folders/groups/bookmarksActions/items");
         BrowserLocation location = new BrowserLocation("neatconfiguration", "browser", path + ":treeview:");
         eventBus.fireEvent(new LocationChangedEvent(location));
         // locationController.goTo(location);
