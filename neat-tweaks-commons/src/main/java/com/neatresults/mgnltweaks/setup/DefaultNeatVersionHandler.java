@@ -88,7 +88,7 @@ public abstract class DefaultNeatVersionHandler extends DefaultModuleVersionHand
     @Override
     protected List<Task> getBasicInstallTasks(InstallContext installContext) {
         List<Task> tasks = new ArrayList<Task>();
-        tasks.add(new IsModuleInstalledOrRegistered("remove old neatweaks if existit", "", "neat-tweaks",
+        tasks.add(new IsModuleInstalledOrRegistered("remove old neat-tweaks if exists", "", "neat-tweaks",
                 new ArrayDelegateTask("",
                           new RemoveNodeTask("","","config","/modules/neat-tweaks"),
                           new RemoveNodeTask("","","config","/modules/ui-admincentral/config/appLauncherLayout/groups/manage/apps/neatconfiguration"),

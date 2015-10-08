@@ -29,6 +29,11 @@ Maven dependency
       <artifactId>neat-tweaks-developers</artifactId>
       <version>1.0.2</version>
     </dependency>
+    <dependency>
+      <groupId>com.neatresults.mgnltweaks</groupId>
+      <artifactId>neat-tweaks-commons</artifactId>
+      <version>1.0.2</version>
+    </dependency>
 ```
 
 Versions
