@@ -50,15 +50,16 @@ public class NeatTweaks4DevelopersVersionHandler extends DefaultNeatVersionHandl
                 new CreateNodeTask("", "/modules/ui-admincentral/config/appLauncherLayout/groups/manage/apps", "neatconfiguration", NodeTypes.ContentNode.NAME)));
         tasks.add(new MoveNodeTask("", "/modules/ui-admincentral/config/appLauncherLayout/groups/manage/apps/configuration", "/modules/ui-admincentral/config/appLauncherLayout/groups/tools/apps/configuration", false));
         tasks.add(new NodeExistsDelegateTask("", "/modules/ui-admincentral/apps/stkSiteApp/subApps",
-                new SetPropertyTask("config", "/modules/ui-admincentral/apps/stkSiteApp/subApps", "extends", "/modules/neat-tweaks/apps/neatconfiguration/subApps")));
+                new SetPropertyTask("config", "/modules/ui-admincentral/apps/stkSiteApp/subApps", "extends", "/modules/neat-tweaks-developers/apps/neatconfiguration/subApps")));
         tasks.add(new NodeExistsDelegateTask("", "/modules/ui-admincentral/apps/stkThemesApp/subApps",
-                new SetPropertyTask("config", "/modules/ui-admincentral/apps/stkThemesApp/subApps", "extends", "/modules/neat-tweaks/apps/neatconfiguration/subApps")));
+                new SetPropertyTask("config", "/modules/ui-admincentral/apps/stkThemesApp/subApps", "extends", "/modules/neat-tweaks-developers/apps/neatconfiguration/subApps")));
         tasks.add(new NodeExistsDelegateTask("", "/modules/ui-admincentral/apps/stkChannelsApp/subApps",
-                new SetPropertyTask("config", "/modules/ui-admincentral/apps/stkChannelsApp/subApps", "extends", "/modules/neat-tweaks/apps/neatconfiguration/subApps")));
+                new SetPropertyTask("config", "/modules/ui-admincentral/apps/stkChannelsApp/subApps", "extends", "/modules/neat-tweaks-developers/apps/neatconfiguration/subApps")));
         tasks.add(new NodeExistsDelegateTask("", "/modules/ui-admincentral/apps/stkDialogsApp/subApps",
-                new SetPropertyTask("config", "/modules/ui-admincentral/apps/stkDialogsApp/subApps", "extends", "/modules/neat-tweaks/apps/neatconfiguration/subApps")));
+                new SetPropertyTask("config", "/modules/ui-admincentral/apps/stkDialogsApp/subApps", "extends", "/modules/neat-tweaks-developers/apps/neatconfiguration/subApps")));
         tasks.add(new NodeExistsDelegateTask("", "/modules/ui-admincentral/apps/stkTemplateDefsApp/subApps",
-                new SetPropertyTask("config", "/modules/ui-admincentral/apps/stkTemplateDefsApp/subApps", "extends", "/modules/neat-tweaks/apps/neatconfiguration/subApps")));
+                new SetPropertyTask("config", "/modules/ui-admincentral/apps/stkTemplateDefsApp/subApps", "extends", "/modules/neat-tweaks-developers/apps/neatconfiguration/subApps")));
         return tasks;
     }
+    
 }
