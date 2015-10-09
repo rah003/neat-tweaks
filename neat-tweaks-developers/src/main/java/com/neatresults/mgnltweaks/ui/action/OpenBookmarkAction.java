@@ -26,19 +26,23 @@
 package com.neatresults.mgnltweaks.ui.action;
 
 import info.magnolia.event.EventBus;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.ui.api.action.AbstractAction;
 import info.magnolia.ui.api.action.ActionExecutionException;
 import info.magnolia.ui.api.action.ConfiguredActionDefinition;
-import info.magnolia.ui.api.app.SubAppContext;
 import info.magnolia.ui.api.event.AdmincentralEventBus;
+import info.magnolia.ui.api.event.ContentChangedEvent;
 import info.magnolia.ui.api.location.LocationChangedEvent;
-import info.magnolia.ui.api.location.LocationController;
 import info.magnolia.ui.contentapp.browser.BrowserLocation;
+import info.magnolia.ui.vaadin.integration.jcr.JcrItemUtil;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.neatresults.mgnltweaks.ui.action.OpenBookmarkAction.Definition;
 
@@ -47,21 +51,18 @@ import com.neatresults.mgnltweaks.ui.action.OpenBookmarkAction.Definition;
  */
 public class OpenBookmarkAction extends AbstractAction<Definition> {
 
-    private SubAppContext subAppContext;
+    private static final Logger log = LoggerFactory.getLogger(OpenBookmarkAction.class);
     private EventBus eventBus;
 
-    private final LocationController locationController;
     private Definition definition;
 
     /**
      * Action to move focus to some other location.
      */
     @Inject
-    public OpenBookmarkAction(Definition definition, SubAppContext subAppContext, @Named(AdmincentralEventBus.NAME) EventBus eventBus, LocationController locationController) {
+    public OpenBookmarkAction(Definition definition, @Named(AdmincentralEventBus.NAME) EventBus eventBus) {
         super(definition);
         this.definition = definition;
-        this.locationController = locationController;
-        this.subAppContext = subAppContext;
         this.eventBus = eventBus;
     }
 
@@ -71,7 +72,13 @@ public class OpenBookmarkAction extends AbstractAction<Definition> {
         String path = StringUtils.defaultIfEmpty(definition.getPath(), "/modules/neat-tweaks-developers/apps/neatconfiguration/subApps/browser/actionbar/sections/folders/groups/bookmarksActions/items");
         BrowserLocation location = new BrowserLocation("neatconfiguration", "browser", path + ":treeview:");
         eventBus.fireEvent(new LocationChangedEvent(location));
-        // locationController.goTo(location);
+        // open selected node
+        try {
+            ContentChangedEvent cce = new ContentChangedEvent(JcrItemUtil.getItemId(RepositoryConstants.CONFIG, path), true);
+            eventBus.fireEvent(cce);
+        } catch (RepositoryException e) {
+            log.error("Ooops, failed to retrieve node at path {} and open it while executing open bookmark action with {}", path, e.getMessage(), e);
+        }
     }
 
 

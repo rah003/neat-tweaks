@@ -32,11 +32,10 @@ import info.magnolia.ui.api.action.AbstractAction;
 import info.magnolia.ui.api.action.ActionExecutionException;
 import info.magnolia.ui.api.action.ConfiguredActionDefinition;
 import info.magnolia.ui.api.app.AppController;
-import info.magnolia.ui.api.app.SubAppContext;
 import info.magnolia.ui.api.context.UiContext;
 import info.magnolia.ui.api.event.AdmincentralEventBus;
+import info.magnolia.ui.api.event.ContentChangedEvent;
 import info.magnolia.ui.api.location.LocationChangedEvent;
-import info.magnolia.ui.api.location.LocationController;
 import info.magnolia.ui.api.overlay.ConfirmationCallback;
 import info.magnolia.ui.contentapp.browser.BrowserLocation;
 import info.magnolia.ui.vaadin.integration.jcr.JcrItemAdapter;
@@ -60,11 +59,8 @@ import com.neatresults.mgnltweaks.ui.action.AddBookmarkAction.Definition;
 public class AddBookmarkAction extends AbstractAction<Definition> {
 
     private static final Logger log = LoggerFactory.getLogger(AddBookmarkAction.class);
-    private SubAppContext subAppContext;
     private EventBus eventBus;
 
-    private final LocationController locationController;
-    private Definition definition;
     private JcrItemAdapter item;
     private UiContext uiContext;
     private AppController appController;
@@ -73,11 +69,8 @@ public class AddBookmarkAction extends AbstractAction<Definition> {
      * Action to move focus to some other location.
      */
     @Inject
-    public AddBookmarkAction(Definition definition, JcrItemAdapter item, SubAppContext subAppContext, @Named(AdmincentralEventBus.NAME) EventBus eventBus, LocationController locationController, UiContext uiContext, AppController appController) {
+    public AddBookmarkAction(Definition definition, JcrItemAdapter item, @Named(AdmincentralEventBus.NAME) EventBus eventBus, UiContext uiContext, AppController appController) {
         super(definition);
-        this.definition = definition;
-        this.locationController = locationController;
-        this.subAppContext = subAppContext;
         this.eventBus = eventBus;
         this.item = item;
         this.uiContext = uiContext;
@@ -104,28 +97,29 @@ public class AddBookmarkAction extends AbstractAction<Definition> {
             uiContext.openConfirmation(MessageStyleTypeEnum.INFO, "Wanna wait?", "To add a bookmark, one need to refresh the app, to refresh the app, one must kill it. To make this harder, observation kicks in only every 4 seconds so you got to wait for the refresh.",
                     "OK, I'll take a nap", "no way", false, new ConfirmationCallback() {
 
-                        @Override
-                        public void onCancel() {
-                            // TODO Auto-generated method stub
+                @Override
+                public void onCancel() {
+                            // just do nothing :D
+                }
 
-                        }
+                @Override
+                public void onSuccess() {
+                    try {
+                        Thread.sleep(4000);
+                    } catch (InterruptedException e) {
+                        // meh
+                    }
+                    // stop the app
+                    appController.stopCurrentApp();
+                    // start the app and select item that was selected before stopping
+                    BrowserLocation location = new BrowserLocation("neatconfiguration", "helperBrowser", path + ":treeview:");
+                    eventBus.fireEvent(new LocationChangedEvent(location));
+                    // open selected node
+                    ContentChangedEvent cce = new ContentChangedEvent(item.getItemId(), true);
+                    eventBus.fireEvent(cce);
+                }
 
-                        @Override
-                        public void onSuccess() {
-                            try {
-                                Thread.sleep(4000);
-                            } catch (InterruptedException e) {
-                                // meh
-                            }
-
-                            // subAppContext.getAppContext().closeSubApp(subAppContext.getInstanceId());
-                            // subAppContext.getAppContext().openSubApp(location);
-                            appController.stopCurrentApp();
-                            BrowserLocation location = new BrowserLocation("neatconfiguration", "helperBrowser", path + ":treeview:");
-                            eventBus.fireEvent(new LocationChangedEvent(location));
-                        }
-
-                    });
+            });
         } catch (RepositoryException e) {
             log.error("Ooops, failed to add bookmark for {} with {}.", item, e.getMessage(), e);
         }
