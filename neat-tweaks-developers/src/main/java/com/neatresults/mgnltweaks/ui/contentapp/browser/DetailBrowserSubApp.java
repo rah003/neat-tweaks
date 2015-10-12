@@ -56,12 +56,15 @@ public class DetailBrowserSubApp extends BrowserSubApp {
     private EventBus adminCentralEventBus;
     private ContentChangedEvent invokeLater = null;
     private WorkbenchPresenter workbenchPresenter;
+    private String rootPath;
+    private EventBus subAppEventBus;
 
     @Inject
     public DetailBrowserSubApp(ActionExecutor actionExecutor, final SubAppContext subAppContext, final ContentSubAppView view, final BrowserPresenter browser, final @Named(SubAppEventBus.NAME) EventBus subAppEventBus,
             @Named(AdmincentralEventBus.NAME) EventBus adminCentralEventBus, ContentConnector contentConnector, AvailabilityChecker checker) {
         super(actionExecutor, subAppContext, view, browser, subAppEventBus, adminCentralEventBus, contentConnector, checker);
         this.adminCentralEventBus = adminCentralEventBus;
+        this.subAppEventBus = subAppEventBus;
         Field field;
         try {
             field = browser.getClass().getDeclaredField("workbenchPresenter");
@@ -92,8 +95,14 @@ public class DetailBrowserSubApp extends BrowserSubApp {
         final Object item = contentConnector.getItemIdByUrlFragment(location.getNodePath());
         // expand our item
         workbenchPresenter.expand(item);
-        // bring it to view manually - something is screwed up in magnolia itself
-        // workbenchPresenter.select(item); not working either
     }
 
+    @Override
+    public void locationChanged(final Location location) {
+        super.locationChanged(location);
+        if (rootPath == null && location instanceof RerootBrowserLocation) {
+            rootPath = ((RerootBrowserLocation) location).getNodePath();
+            subAppEventBus.fireEvent(new ContainerPathChangedEvent(rootPath));
+        }
+    }
 }

@@ -27,10 +27,11 @@ package com.neatresults.mgnltweaks.ui.column;
 
 import info.magnolia.context.MgnlContext;
 import info.magnolia.event.EventBus;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.ui.api.app.SubAppContext;
 import info.magnolia.ui.api.app.SubAppEventBus;
 import info.magnolia.ui.api.event.AdmincentralEventBus;
-import info.magnolia.ui.api.location.DefaultLocation;
+import info.magnolia.ui.api.event.ContentChangedEvent;
 import info.magnolia.ui.api.location.Location;
 import info.magnolia.ui.api.location.LocationChangedEvent;
 import info.magnolia.ui.api.location.LocationController;
@@ -38,6 +39,7 @@ import info.magnolia.ui.contentapp.browser.BrowserLocation;
 import info.magnolia.ui.contentapp.browser.ConfiguredBrowserSubAppDescriptor;
 import info.magnolia.ui.vaadin.integration.contentconnector.ConfiguredJcrContentConnectorDefinition;
 import info.magnolia.ui.vaadin.integration.contentconnector.ContentConnectorDefinition;
+import info.magnolia.ui.vaadin.integration.jcr.JcrItemUtil;
 import info.magnolia.ui.vaadin.integration.jcr.JcrNodeItemId;
 import info.magnolia.ui.vaadin.integration.jcr.JcrPropertyAdapter;
 import info.magnolia.ui.workbench.column.AbstractColumnFormatter;
@@ -55,6 +57,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.neatresults.mgnltweaks.ui.contentapp.browser.RerootBrowserLocation;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.server.Page;
@@ -189,8 +192,16 @@ public class LinkToPathColumnFormatter extends AbstractColumnFormatter<ColumnDef
                     Page.getCurrent().getJavaScript().execute(message);
 
                 } else {
-                    Location location = new DefaultLocation("app", appName, subAppName, workPath);
+                    // open app (subapp)
+                    Location location = new RerootBrowserLocation(appName, subAppName, workPath, true);
                     adminEventBus.fireEvent(new LocationChangedEvent(location));
+                    // expand selected node
+                    try {
+                        ContentChangedEvent cce = new ContentChangedEvent(JcrItemUtil.getItemId(RepositoryConstants.CONFIG, path), true);
+                        eventBus.fireEvent(cce);
+                    } catch (RepositoryException e) {
+                        log.error("Ooops, failed to retrieve node at path {} and open it while trying to open definition with {}", path, e.getMessage(), e);
+                    }
                 }
             }
         });
