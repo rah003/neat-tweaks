@@ -30,16 +30,19 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.event.EventBus;
 import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.jcr.util.NodeUtil;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.ui.api.action.AbstractAction;
 import info.magnolia.ui.api.action.ActionExecutionException;
 import info.magnolia.ui.api.action.ConfiguredActionDefinition;
 import info.magnolia.ui.api.app.SubAppContext;
 import info.magnolia.ui.api.event.AdmincentralEventBus;
+import info.magnolia.ui.api.event.ContentChangedEvent;
 import info.magnolia.ui.api.location.LocationChangedEvent;
 import info.magnolia.ui.api.location.LocationController;
 import info.magnolia.ui.contentapp.browser.BrowserLocation;
 import info.magnolia.ui.dialog.formdialog.FormDialogPresenterFactory;
 import info.magnolia.ui.vaadin.gwt.client.shared.AbstractElement;
+import info.magnolia.ui.vaadin.integration.jcr.JcrItemUtil;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -47,12 +50,17 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.neatresults.mgnltweaks.ui.action.OpenDefinitionFromPageAction.Definition;
 
 /**
  * Action to open a page definition.
  */
 public class OpenDefinitionFromPageAction extends AbstractAction<Definition> {
+
+    private static final Logger log = LoggerFactory.getLogger(OpenDefinitionFromPageAction.class);
 
     private FormDialogPresenterFactory dialogPresenterFactory;
     private AbstractElement element;
@@ -93,9 +101,16 @@ public class OpenDefinitionFromPageAction extends AbstractAction<Definition> {
                 throw new ActionExecutionException("Not able to open definition for " + node.getPath());
             }
 
+            // open subapp
             BrowserLocation location = new BrowserLocation("neatconfiguration", "helperBrowser", templatePath + ":treeview:");
             eventBus.fireEvent(new LocationChangedEvent(location));
-            // locationController.goTo(location);
+            // open selected node
+            try {
+                ContentChangedEvent cce = new ContentChangedEvent(JcrItemUtil.getItemId(RepositoryConstants.CONFIG, path), true);
+                eventBus.fireEvent(cce);
+            } catch (RepositoryException e) {
+                log.error("Ooops, failed to retrieve node at path {} and open it while trying to open definition with {}", path, e.getMessage(), e);
+            }
 
         } catch (RepositoryException e) {
             throw new ActionExecutionException(e);
