@@ -4,6 +4,7 @@
   <name>neat-tweaks-developers</name>
   <displayName>${project.name}</displayName>
   <description>${project.description}</description>
+  <class>com.neatresults.mgnltweaks.NeatTweaks4DevelopersModule</class>
   <versionHandler>com.neatresults.mgnltweaks.setup.NeatTweaks4DevelopersVersionHandler</versionHandler>
   <version>${project.version}</version>
 
@@ -25,6 +26,11 @@
     <dependency>
       <name>standard-templating-kit</name>
       <version>2.7/*</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <name>inplace-templating</name>
+      <version>1.0/*</version>
       <optional>true</optional>
     </dependency>
     <dependency>
