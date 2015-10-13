@@ -57,6 +57,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.neatresults.mgnltweaks.NeatTweaks4DevelopersModule;
 import com.neatresults.mgnltweaks.ui.contentapp.browser.RerootBrowserLocation;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
@@ -77,14 +78,16 @@ public class LinkToPathColumnFormatter extends AbstractColumnFormatter<ColumnDef
     private EventBus adminEventBus;
     private EventBus eventBus;
     private SubAppContext subAppContext;
+    private NeatTweaks4DevelopersModule module;
 
     @Inject
-    public LinkToPathColumnFormatter(Definition definition, LocationController locationController, @Named(AdmincentralEventBus.NAME) final EventBus adminEventBus, @Named(SubAppEventBus.NAME) final EventBus eventBus, SubAppContext subAppContext) {
+    public LinkToPathColumnFormatter(Definition definition, LocationController locationController, @Named(AdmincentralEventBus.NAME) final EventBus adminEventBus, @Named(SubAppEventBus.NAME) final EventBus eventBus, SubAppContext subAppContext, NeatTweaks4DevelopersModule module) {
         super(definition);
         this.locationController = locationController;
         this.adminEventBus = adminEventBus;
         this.eventBus = eventBus;
         this.subAppContext = subAppContext;
+        this.module = module;
     }
 
     @Override
@@ -193,7 +196,7 @@ public class LinkToPathColumnFormatter extends AbstractColumnFormatter<ColumnDef
 
                 } else {
                     // open app (subapp)
-                    Location location = new RerootBrowserLocation(appName, subAppName, workPath, true);
+                    Location location = new RerootBrowserLocation(appName, subAppName, workPath, module.isShowSubtreeOnlyInHelper());
                     adminEventBus.fireEvent(new LocationChangedEvent(location));
                     // expand selected node
                     try {
