@@ -42,6 +42,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * HierarchicalJcrContainer that can change it's root at runtime.
+ */
 public class RootableHierarchicalJcrContainer extends HierarchicalJcrContainer {
 
     private static final Logger log = LoggerFactory.getLogger(RootableHierarchicalJcrContainer.class);
