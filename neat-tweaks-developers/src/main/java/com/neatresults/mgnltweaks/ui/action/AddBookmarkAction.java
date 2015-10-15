@@ -28,6 +28,7 @@ package com.neatresults.mgnltweaks.ui.action;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.event.EventBus;
 import info.magnolia.jcr.util.NodeTypes;
+import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.ui.api.action.AbstractAction;
 import info.magnolia.ui.api.action.ActionExecutionException;
 import info.magnolia.ui.api.action.ConfiguredActionDefinition;
@@ -77,14 +78,13 @@ public class AddBookmarkAction extends AbstractAction<Definition> {
         this.appController = appController;
     }
 
-
     @Override
     public void execute() throws ActionExecutionException {
         try {
             final String path = item.getJcrItem().getPath();
 
             Session session = MgnlContext.getJCRSession("config");
-            Node bar = session.getNode("/modules/neat-tweaks-developers/apps/neatconfiguration/subApps/browser/actionbar/sections/folders/groups/bookmarksActions/items");
+            Node bar = NodeUtil.createPath(session.getNode("/modules/neat-tweaks-developers/apps/neatconfiguration/subApps/browser/actionbar/sections/folders/groups"), "bookmarksActions/items", NodeTypes.ContentNode.NAME);
             String name = "bkmk" + StringUtils.capitalize(item.getJcrItem().getName());
             bar.addNode(name, NodeTypes.ContentNode.NAME);
             Node actions = session.getNode("/modules/neat-tweaks-developers/apps/neatconfiguration/subApps/browser/actions");
@@ -99,7 +99,7 @@ public class AddBookmarkAction extends AbstractAction<Definition> {
 
                 @Override
                 public void onCancel() {
-                            // just do nothing :D
+                    // just do nothing :D
                 }
 
                 @Override
