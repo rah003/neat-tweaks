@@ -10,6 +10,10 @@
 
   <components>
     <id>subapp</id>
+    <component>
+      <type>info.magnolia.ui.api.availability.AvailabilityChecker</type>
+      <implementation>com.neatresults.mgnltweaks.action.availability.RootAndPropAppAvailabilityCheckerImpl</implementation>
+    </component>
   </components>
 
   <dependencies>
@@ -43,11 +47,10 @@
       <version>1.0/*</version>
       <optional>true</optional>
     </dependency>
-  <!--
     <dependency>
       <name>multisite</name>
       <version>1.0/*</version>
+      <optional>true</optional>
     </dependency>
-  -->
   </dependencies>
 </module>
