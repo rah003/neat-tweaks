@@ -34,20 +34,20 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.i18nsystem.SimpleTranslator;
 import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.jcr.util.NodeUtil;
-import info.magnolia.module.templatingkit.sites.Site;
-import info.magnolia.module.templatingkit.sites.SiteManager;
-import info.magnolia.module.templatingkit.templates.pages.STKPage;
+import info.magnolia.objectfactory.Components;
 import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.template.AreaDefinition;
 import info.magnolia.rendering.template.ComponentAvailability;
 import info.magnolia.rendering.template.TemplateDefinition;
 import info.magnolia.rendering.template.configured.ConfiguredAreaDefinition;
+import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
 import info.magnolia.ui.form.field.definition.SelectFieldDefinition;
 import info.magnolia.ui.form.field.definition.SelectFieldOptionDefinition;
 import info.magnolia.ui.form.field.factory.SelectFieldFactory;
 import info.magnolia.ui.vaadin.integration.jcr.JcrNodeAdapter;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -79,16 +79,25 @@ public class ComponentTemplateSelectFieldFactory extends SelectFieldFactory<Defi
     private Item currentComponent;
     private TemplateDefinitionRegistry registry;
     private String templateId;
-    private SiteManager siteManager;
+    private Object siteManager;
 
     @Inject
-    public ComponentTemplateSelectFieldFactory(Definition definition, Item relatedFieldItem, SimpleTranslator i18n, MessagesManager oldi18n, TemplateDefinitionRegistry registry, SiteManager sm) {
+    public ComponentTemplateSelectFieldFactory(Definition definition, Item relatedFieldItem, SimpleTranslator i18n, MessagesManager oldi18n, TemplateDefinitionRegistry registry) {
         super(definition, relatedFieldItem);
         this.i18n = i18n;
         this.oldi18n = oldi18n;
         currentComponent = relatedFieldItem;
         this.registry = registry;
-        this.siteManager = sm;
+        try {
+            this.siteManager = Components.getComponent(Class.forName("info.magnolia.module.templatingkit.sites.SiteManager"));
+        } catch (Exception e) {
+            log.debug(e.getMessage(), e);
+            try {
+                this.siteManager = Components.getComponent(Class.forName("info.magnolia.module.site.SiteManager"));
+            } catch (ClassNotFoundException e1) {
+                log.debug(e.getMessage(), e);
+            }
+        }
     }
 
     @Override
@@ -182,7 +191,8 @@ public class ComponentTemplateSelectFieldFactory extends SelectFieldFactory<Defi
                 TemplateDefinition componentPageOrAreaDefinition = areaHierarchy.get(areaName);
                 if (componentPageOrAreaDefinition instanceof AreaDefinition) {
                     return ((AreaDefinition) componentPageOrAreaDefinition).getAvailableComponents();
-                } else if (componentPageOrAreaDefinition instanceof STKPage) {
+
+                } else if (componentPageOrAreaDefinition instanceof info.magnolia.module.templatingkit.templates.pages.STKPage) {
                     log.warn("found definition that is of type STKPage when looking for component availability");
                 }
                 return null;
@@ -259,15 +269,30 @@ public class ComponentTemplateSelectFieldFactory extends SelectFieldFactory<Defi
     }
 
     private TemplateDefinition mergeDefinition(TemplateDefinition templateDef) {
-        // ConfiguredAreaDefinition areaDef = (ConfiguredAreaDefinition) templateDef;
-        Site site = siteManager.getAssignedSite(((JcrNodeAdapter) currentComponent).getJcrItem());
+        Node jcrItem = ((JcrNodeAdapter) currentComponent).getJcrItem();
+        Object site = null;
+        // yes reflection because that class was changed between 5.3 and 5.4 ... feel free to fork and use normal code for your major version. I'm not maintaining two branches.
+        try {
+            site = siteManager.getClass().getMethod("getAssignedSite", Node.class).invoke(siteManager, jcrItem);
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+            log.error(e.getMessage(), e);
+        }
+
         if (site == null) {
             return templateDef;
         }
-        if (site.getTemplates().getPrototype() == null) {
+        Object templates;
+        TemplateDefinition prototype = null;
+        try {
+            templates = site.getClass().getMethod("getTemplates").invoke(site);
+            prototype = (TemplateDefinition) templates.getClass().getMethod("getPrototype").invoke(templates);
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+            log.error(e.getMessage(), e);
+        }
+        if (prototype == null) {
             return templateDef;
         }
-        AreaDefinition tempAreaPrototype = site.getTemplates().getPrototype().getArea(templateDef.getName());
+        AreaDefinition tempAreaPrototype = ((ConfiguredTemplateDefinition) prototype).getAreas().get(templateDef.getName());
         if (tempAreaPrototype == null) {
             return templateDef;
         }

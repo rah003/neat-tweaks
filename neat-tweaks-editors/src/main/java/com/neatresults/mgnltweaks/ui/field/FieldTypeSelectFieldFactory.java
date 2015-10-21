@@ -46,6 +46,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -102,9 +103,9 @@ public class FieldTypeSelectFieldFactory extends SelectFieldFactory<Definition> 
                     SelectFieldOptionDefinition field = new SelectFieldOptionDefinition();
                     Class<? extends FieldDefinition> fieldDef = registry.get(id).getDefinitionClass();
                     // directly defined label
-                    String label = id;
+                    String label = id + " (" + StringUtils.replaceOnce(fieldDef.getName(), "info.magnolia.module.", "i.m.m.") + ")";
 
-                    field.setLabel(id + " (" + fieldDef.getName() + ")");
+                    field.setLabel(label);
                     field.setName(definition.getName());
                     field.setValue(fieldDef.getName());
                     fields.add(field);
@@ -129,6 +130,7 @@ public class FieldTypeSelectFieldFactory extends SelectFieldFactory<Definition> 
     public static class Definition extends SelectFieldDefinition {
 
         public Definition() {
+            setFilteringMode(2);
         }
     }
 }
