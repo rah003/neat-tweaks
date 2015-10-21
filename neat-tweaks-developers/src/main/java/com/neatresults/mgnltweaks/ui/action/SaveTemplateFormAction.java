@@ -50,21 +50,8 @@ import org.slf4j.LoggerFactory;
 import com.neatresults.mgnltweaks.ui.action.SaveTemplateFormAction.Definition;
 
 /**
- * Action for saving Items in Forms.<br>
- * The name of the created node will be set to:<br>
- * <b>the value of the property called 'jcrName' if</b>
- * <ul>
- * <li>the node has no property called 'jcrName'</li>
- * </ul>
- * <b>the value of the property called 'name' if</b>
- * <ul>
- * <li>the node has a property called 'name' AND</li>
- * <li>the node has no property called 'jcrName' AND</li>
- * </ul>
- * <b>a default name if non of these conditions are valid</b> <br>
- * To change this behavior extend this Action and override {@link SaveTemplateFormAction#setNodeName(Node, JcrNodeAdapter)}
+ * This action will save the node and get rid of all properties under given node at the same time.
  *
- * @see SaveFormActionDefinition
  */
 public class SaveTemplateFormAction extends AbstractAction<Definition> {
 
