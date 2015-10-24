@@ -35,6 +35,7 @@ import info.magnolia.ui.api.action.ActionExecutionException;
 import info.magnolia.ui.api.context.UiContext;
 import info.magnolia.ui.framework.action.ExportAction;
 import info.magnolia.ui.framework.action.ExportActionDefinition;
+import info.magnolia.ui.framework.util.TempFileStreamResource;
 import info.magnolia.ui.vaadin.integration.jcr.JcrItemAdapter;
 
 import java.io.File;
@@ -42,7 +43,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,7 +58,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vaadin.server.Page;
-import com.vaadin.server.StreamResource;
 
 /**
  * Action for multiple nodes in xml format.
@@ -69,6 +68,7 @@ public class ExportMultipleAction extends ExportAction {
     private Map<String, File> tempFiles = new HashMap<String, File>();
     private int postExecCount;
     private File fileOutput;
+    private TempFileStreamResource tempFileStreamResource;
 
     @Inject
     public ExportMultipleAction(Definition definition, List<JcrItemAdapter> items, CommandsManager commandsManager, UiContext uiContext, SimpleTranslator i18n) throws ActionExecutionException {
@@ -103,6 +103,14 @@ public class ExportMultipleAction extends ExportAction {
         super.executeOnItem(item);
     }
 
+    @Override
+    protected void onPreExecute() throws Exception {
+        if (tempFileStreamResource == null) {
+            tempFileStreamResource = new TempFileStreamResource();
+            tempFileStreamResource.setTempFileName("magnoliaExport" + (Math.random() * 1000));
+            tempFileStreamResource.setTempFileExtension("zip");
+        }
+    }
     /**
      * Once all items are exported, zip it all and send to client.
      */
@@ -117,11 +125,7 @@ public class ExportMultipleAction extends ExportAction {
             fileName = "magnoliaExport.zip";
             mimeType = MIMEMapping.getMIMEType("zip");
 
-            // will get deleted by stream after it is streamed through http request
-            fileOutput = File.createTempFile("magnoliaExport", ".zip", Path.getTempDirectory());
-
-            FileOutputStream fos = new FileOutputStream(fileOutput);
-            ArchiveOutputStream zipOutput = new ArchiveStreamFactory().createArchiveOutputStream("zip", fos);
+            ArchiveOutputStream zipOutput = new ArchiveStreamFactory().createArchiveOutputStream("zip", tempFileStreamResource.getTempFileOutputStream());
             try {
 
                 for (Entry<String, File> entry : tempFiles.entrySet()) {
@@ -134,7 +138,6 @@ public class ExportMultipleAction extends ExportAction {
             } finally {
                 zipOutput.finish();
                 IOUtils.closeQuietly(zipOutput);
-                IOUtils.closeQuietly(fos);
             }
 
         } else {
@@ -144,33 +147,14 @@ public class ExportMultipleAction extends ExportAction {
 
         }
         if (postExecCount == getItems().size()) {
-            openFileInBlankWindow(fileName, mimeType);
+            tempFileStreamResource.setFilename(fileName);
+            tempFileStreamResource.setMIMEType(mimeType);
+            // is this really necessary?
+            tempFileStreamResource.getStream().setParameter("Content-Disposition", "attachment; filename=" + fileName + "\"");
+            // Opens the resource for download
+            Page.getCurrent().open(tempFileStreamResource, "", true);
         }
 
-    }
-
-    @Override
-    protected void openFileInBlankWindow(String fileName, String mimeType) {
-        StreamResource.StreamSource source = new StreamResource.StreamSource() {
-            @Override
-            public InputStream getStream() {
-                try {
-                    return new DeleteOnCloseFileInputStream(fileOutput);
-                } catch (IOException e) {
-                    log.warn("Not able to create an InputStream from the OutputStream. Return null", e);
-                    return null;
-                }
-            }
-        };
-        StreamResource resource = new StreamResource(source, fileName);
-        // Accessing the DownloadStream via getStream() will set its cacheTime to whatever is set in the parent
-        // StreamResource. By default it is set to 1000 * 60 * 60 * 24, thus we have to override it beforehand.
-        // A negative value or zero will disable caching of this stream.
-        resource.setCacheTime(-1);
-        resource.getStream().setParameter("Content-Disposition", "attachment; filename=" + fileName + "\"");
-        resource.setMIMEType(mimeType);
-
-        Page.getCurrent().open(resource, "", true);
     }
 
     /**

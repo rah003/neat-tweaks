@@ -31,12 +31,13 @@ import info.magnolia.ui.api.app.SubAppContext;
 import info.magnolia.ui.api.app.SubAppEventBus;
 import info.magnolia.ui.api.location.Location;
 import info.magnolia.ui.vaadin.integration.contentconnector.JcrContentConnector;
-import info.magnolia.ui.workbench.container.AbstractJcrContainer;
 import info.magnolia.ui.workbench.tree.TreePresenter;
 import info.magnolia.ui.workbench.tree.TreeView;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+
+import com.vaadin.data.Container;
 
 /**
  * Tree presenter able to dynamically change the root.
@@ -61,9 +62,8 @@ public class RootableTreePresenter extends TreePresenter {
     }
 
     @Override
-    protected AbstractJcrContainer createContainer() {
-        // in 5.4 signature of this method is different:
-        // protected Container.Hierarchical createContainer() {
+    protected Container.Hierarchical createContainer() {
+        // protected AbstractJcrContainer createContainer() {
 
         Location location = subAppContext.getLocation();
         if (location instanceof RerootBrowserLocation) {
