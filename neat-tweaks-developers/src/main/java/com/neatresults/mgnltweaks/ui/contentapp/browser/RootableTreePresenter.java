@@ -62,6 +62,9 @@ public class RootableTreePresenter extends TreePresenter {
 
     @Override
     protected AbstractJcrContainer createContainer() {
+        // in 5.4 signature of this method is different:
+        // protected Container.Hierarchical createContainer() {
+
         Location location = subAppContext.getLocation();
         if (location instanceof RerootBrowserLocation) {
             RerootBrowserLocation browserLocation = (RerootBrowserLocation) location;
