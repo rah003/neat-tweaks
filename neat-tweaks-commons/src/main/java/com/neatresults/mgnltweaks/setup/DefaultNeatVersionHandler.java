@@ -33,6 +33,7 @@ import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AbstractCondition;
 import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.Condition;
+import info.magnolia.module.delta.CreateNodePathTask;
 import info.magnolia.module.delta.IsModuleInstalledOrRegistered;
 import info.magnolia.module.delta.MoveNodeTask;
 import info.magnolia.module.delta.RemoveNodeTask;
@@ -42,9 +43,6 @@ import info.magnolia.objectfactory.Components;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
 
 /**
  * Version handler for tweaks for editors.
@@ -61,7 +59,7 @@ public abstract class DefaultNeatVersionHandler extends DefaultModuleVersionHand
             public boolean check(InstallContext installContext) {
                 MagnoliaConfigurationProperties props = Components.getComponent(MagnoliaConfigurationProperties.class);
                 String theme = props.getProperty("magnolia.ui.vaadin.theme");
-                return "neatcentral53".equals(theme) || "neatcentral54".equals(theme);
+                return "neatcentral53".equals(theme) || "neatcentral54".equals(theme) || theme.startsWith("neatcentralcustom");
             }
         });
         return conditions;
@@ -73,27 +71,20 @@ public abstract class DefaultNeatVersionHandler extends DefaultModuleVersionHand
         if (!LicenseFileExtractor.getInstance().get(LicenseFileExtractor.VERSION_NUMBER).startsWith("5.4")) {
             tasks.add(new InstallTextResourceTask("/ui-admincentral/neat_theme.css"));
         } else {
-            try {
-                Session session = installContext.getJCRSession("resources");
-                session.getRootNode().addNode("admincentral", NodeTypes.Folder.NAME);
-                session.save();
-            } catch (RepositoryException e) {
-                e.printStackTrace();
-                // ignore
-            }
+            tasks.add(new CreateNodePathTask("admincentral", "/", NodeTypes.Folder.NAME));
         }
         return tasks;
     }
-    
+
     @Override
     protected List<Task> getBasicInstallTasks(InstallContext installContext) {
         List<Task> tasks = new ArrayList<Task>();
         tasks.add(new IsModuleInstalledOrRegistered("remove old neat-tweaks if exists", "", "neat-tweaks",
                 new ArrayDelegateTask("",
-                          new RemoveNodeTask("","","config","/modules/neat-tweaks"),
-                          new RemoveNodeTask("","","config","/modules/ui-admincentral/config/appLauncherLayout/groups/manage/apps/neatconfiguration"),
-                          new MoveNodeTask("", "/modules/ui-admincentral/config/appLauncherLayout/groups/tools/apps/configuration", "/modules/ui-admincentral/config/appLauncherLayout/groups/manage/apps/configuration", false)
-                )));
+                        new RemoveNodeTask("","","config","/modules/neat-tweaks"),
+                        new RemoveNodeTask("","","config","/modules/ui-admincentral/config/appLauncherLayout/groups/manage/apps/neatconfiguration"),
+                        new MoveNodeTask("", "/modules/ui-admincentral/config/appLauncherLayout/groups/tools/apps/configuration", "/modules/ui-admincentral/config/appLauncherLayout/groups/manage/apps/configuration", false)
+                        )));
         tasks.addAll(super.getBasicInstallTasks(installContext));
         return tasks;
     }
