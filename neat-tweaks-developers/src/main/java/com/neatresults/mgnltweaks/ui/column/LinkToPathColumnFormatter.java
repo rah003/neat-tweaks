@@ -61,7 +61,6 @@ import com.neatresults.mgnltweaks.NeatTweaks4DevelopersModule;
 import com.neatresults.mgnltweaks.ui.contentapp.browser.RerootBrowserLocation;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
-import com.vaadin.server.Page;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -110,7 +109,7 @@ public class LinkToPathColumnFormatter extends AbstractColumnFormatter<ColumnDef
                 // template ID
 
                 if ("templateScript".equals(propName) && path.startsWith("/") && path.endsWith(".ftl")) {
-                    return createLinkButton(path, "templates", StringUtils.substringBefore(path, ".ftl"));
+                    return createLinkButton(path, "resources", path);
                 } else if ("dialog".equals(propName) || "dialogName".equals(propName)) {
                     String title = path;
                     String[] parts = path.split(":");
@@ -145,9 +144,9 @@ public class LinkToPathColumnFormatter extends AbstractColumnFormatter<ColumnDef
         try {
             Session session = MgnlContext.getJCRSession(workspace);
             String appName = null;
-            if ("templates".equals(workspace) && session.nodeExists(StringUtils.substringBeforeLast(path, "."))) {
-                appName = "inplace-templating";
-                return createButton(title, appName, "detail", path, new JcrNodeItemId(session.getNode(StringUtils.substringBeforeLast(path, ".")).getIdentifier(), workspace), "");
+            if ("resources".equals(workspace)) {
+                appName = "resources";
+                return createButton(title, appName, "browser", path, path, "");
             } else if ("config".equals(workspace) && session.nodeExists(path)) {
                 String rootPath = "";
                 if (subAppContext.getSubAppDescriptor() instanceof ConfiguredBrowserSubAppDescriptor) {
@@ -185,15 +184,6 @@ public class LinkToPathColumnFormatter extends AbstractColumnFormatter<ColumnDef
                 if ("browser".equals(subAppName)) {
                     Location location = new BrowserLocation(appName, subAppName, workPath + ":treeview:");
                     adminEventBus.fireEvent(new LocationChangedEvent(location));
-                    // FYI: sucks on so many levels, but for some reason vaadin/mangolia will not scroll properly to new location within same browser w/o slight delay introduced by popup window below
-                    String message = "window.alert('stand by for beam up to new location')";
-                    try {
-                        Thread.currentThread().sleep(500);
-                    } catch (InterruptedException e) {
-                        Thread.currentThread().interrupt();
-                    }
-                    Page.getCurrent().getJavaScript().execute(message);
-
                 } else {
                     // open app (subapp)
                     Location location = new RerootBrowserLocation(appName, subAppName, workPath, module.isShowSubtreeOnlyInHelper());
