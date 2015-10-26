@@ -37,9 +37,9 @@ import info.magnolia.ui.api.action.ConfiguredActionDefinition;
 import info.magnolia.ui.api.app.SubAppContext;
 import info.magnolia.ui.api.event.AdmincentralEventBus;
 import info.magnolia.ui.api.event.ContentChangedEvent;
+import info.magnolia.ui.api.location.Location;
 import info.magnolia.ui.api.location.LocationChangedEvent;
 import info.magnolia.ui.api.location.LocationController;
-import info.magnolia.ui.contentapp.browser.BrowserLocation;
 import info.magnolia.ui.dialog.formdialog.FormDialogPresenterFactory;
 import info.magnolia.ui.vaadin.gwt.client.shared.AbstractElement;
 import info.magnolia.ui.vaadin.integration.jcr.JcrItemUtil;
@@ -53,7 +53,9 @@ import javax.jcr.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.neatresults.mgnltweaks.NeatTweaks4DevelopersModule;
 import com.neatresults.mgnltweaks.ui.action.OpenDefinitionFromPageAction.Definition;
+import com.neatresults.mgnltweaks.ui.contentapp.browser.RerootBrowserLocation;
 
 /**
  * Action to open a page definition.
@@ -68,15 +70,18 @@ public class OpenDefinitionFromPageAction extends AbstractAction<Definition> {
     private EventBus eventBus;
 
     private final LocationController locationController;
+    private NeatTweaks4DevelopersModule module;
 
     @Inject
-    public OpenDefinitionFromPageAction(Definition definition, AbstractElement element, SubAppContext subAppContext, @Named(AdmincentralEventBus.NAME) EventBus eventBus, FormDialogPresenterFactory dialogPresenterFactory, LocationController locationController) {
+    public OpenDefinitionFromPageAction(Definition definition, AbstractElement element, SubAppContext subAppContext, @Named(AdmincentralEventBus.NAME) EventBus eventBus, FormDialogPresenterFactory dialogPresenterFactory, LocationController locationController,
+            NeatTweaks4DevelopersModule module) {
         super(definition);
         this.locationController = locationController;
         this.element = element;
         this.subAppContext = subAppContext;
         this.eventBus = eventBus;
         this.dialogPresenterFactory = dialogPresenterFactory;
+        this.module = module;
     }
 
 
@@ -102,7 +107,7 @@ public class OpenDefinitionFromPageAction extends AbstractAction<Definition> {
             }
 
             // open subapp
-            BrowserLocation location = new BrowserLocation("neatconfiguration", "helperBrowser", templatePath + ":treeview:");
+            Location location = new RerootBrowserLocation("neatconfiguration", "helperBrowser", templatePath, module.isShowSubtreeOnlyInHelper());
             eventBus.fireEvent(new LocationChangedEvent(location));
             // open selected node
             try {
