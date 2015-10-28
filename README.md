@@ -39,7 +39,10 @@ Maven dependency
 Versions
 -----------------
 Version 1.0.x compatible with Magnolia 5.3.x
-Modules will install and most of the tweaks will also work with MAgnolia 5.4, but full testing have not been performed yet. If you encounter any issues please report them back (ideally with attached patch :D ).
+Modules will install and most of the tweaks will also work with Magnolia 5.4, but sou will be definitely better of using 2.0 snapshot from master if you want to run tweaks in Magnolia 5.4.x. If you encounter any issues please report them back (ideally with attached patch :D ).
 
 In case you want to just try out in existing installation without need to build everything, please download whole bundle and drop it in your WEB-INF/lib folder. Bundle can be found at https://nexus.magnolia-cms.com/content/repositories/magnolia.forge.releases/com/neatresults/mgnltweaks/neat-tweaks-bundle/1.0.2/neat-tweaks-bundle-1.0.2.zip
 
+Installation & updates 
+-----------------
+Currently there are no update tasks for updates between different versions. If you are updating, you need to remove module first and perform full install. At the moment I'm not planning to add support for updates so don't bother reporting those as issues w/o providing patches at the same time. 
