@@ -15,6 +15,21 @@
       <implementation>com.neatresults.mgnltweaks.action.availability.RootAndPropAppAvailabilityCheckerImpl</implementation>
     </component>
   </components>
+  <components>
+    <id>app-neatconfiguration-status</id>
+    <component>
+      <type>com.neatresults.mgnltweaks.app.status.ConfigStatusSubApp</type>
+      <implementation>com.neatresults.mgnltweaks.app.status.ConfigStatusSubApp</implementation>
+    </component>
+    <component>
+      <type>com.neatresults.mgnltweaks.app.status.ConfigStatusView</type>
+      <implementation>com.neatresults.mgnltweaks.app.status.ConfigStatusViewImpl</implementation>
+    </component>
+    <component>
+      <type>com.neatresults.mgnltweaks.app.status.ConfigStatusPresenter</type>
+      <implementation>com.neatresults.mgnltweaks.app.status.ConfigStatusPresenter</implementation>
+    </component>
+  </components>
 
   <dependencies>
     <dependency>

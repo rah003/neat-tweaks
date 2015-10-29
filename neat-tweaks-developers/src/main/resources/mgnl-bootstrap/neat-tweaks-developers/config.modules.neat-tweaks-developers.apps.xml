@@ -16,7 +16,7 @@
     <sv:value>superuser</sv:value>
   </sv:property>
   <sv:property sv:name="mgnl:lastModified" sv:type="Date">
-    <sv:value>2015-05-12T15:53:43.029+02:00</sv:value>
+    <sv:value>2015-10-28T23:03:39.743+01:00</sv:value>
   </sv:property>
   <sv:property sv:name="mgnl:lastModifiedBy" sv:type="String">
     <sv:value>superuser</sv:value>
@@ -32,7 +32,7 @@
       <sv:value>761bb504-34ba-42fd-a1c1-d6de269f5ca7</sv:value>
     </sv:property>
     <sv:property sv:name="appClass" sv:type="String">
-      <sv:value>info.magnolia.ui.contentapp.ContentApp</sv:value>
+      <sv:value>com.neatresults.mgnltweaks.app.NeatConfigurationBaseApp</sv:value>
     </sv:property>
     <sv:property sv:name="class" sv:type="String">
       <sv:value>info.magnolia.ui.contentapp.ContentAppDescriptor</sv:value>
@@ -62,7 +62,7 @@
       <sv:value>superuser</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastModified" sv:type="Date">
-      <sv:value>2015-05-28T16:09:38.328+02:00</sv:value>
+      <sv:value>2015-10-27T22:31:25.676+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastModifiedBy" sv:type="String">
       <sv:value>superuser</sv:value>
@@ -5735,6 +5735,44 @@
             </sv:node>
           </sv:node>
         </sv:node>
+      </sv:node>
+      <sv:node sv:name="status">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:contentNode</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>d19b21d2-05a9-4945-9975-9a3d5a41662e</sv:value>
+        </sv:property>
+        <sv:property sv:name="closable" sv:type="String">
+          <sv:value>false</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+          <sv:value>admin</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:activationStatus" sv:type="Boolean">
+          <sv:value>false</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:created" sv:type="Date">
+          <sv:value>2015-10-27T19:12:55.313+01:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:createdBy" sv:type="String">
+          <sv:value>superuser</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:lastActivated" sv:type="Date">
+          <sv:value>2015-10-27T19:12:55.324+01:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:lastActivatedBy" sv:type="String">
+          <sv:value>superuser</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:lastModified" sv:type="Date">
+          <sv:value>2015-10-27T22:26:25.933+01:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:lastModifiedBy" sv:type="String">
+          <sv:value>superuser</sv:value>
+        </sv:property>
+        <sv:property sv:name="subAppClass" sv:type="String">
+          <sv:value>com.neatresults.mgnltweaks.app.status.ConfigStatusSubApp</sv:value>
+        </sv:property>
       </sv:node>
       <sv:node sv:name="helperBrowser">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
