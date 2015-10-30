@@ -27,7 +27,9 @@ package com.neatresults.mgnltweaks.setup;
 
 import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.module.InstallContext;
+import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.CreateNodeTask;
+import info.magnolia.module.delta.IsModuleInstalledOrRegistered;
 import info.magnolia.module.delta.MoveNodeTask;
 import info.magnolia.module.delta.NodeExistsDelegateTask;
 import info.magnolia.module.delta.SetPropertyTask;
@@ -59,7 +61,9 @@ public class NeatTweaks4DevelopersVersionHandler extends DefaultNeatVersionHandl
                 new SetPropertyTask("config", "/modules/ui-admincentral/apps/stkDialogsApp/subApps", "extends", "/modules/neat-tweaks-developers/apps/neatconfiguration/subApps")));
         tasks.add(new NodeExistsDelegateTask("", "/modules/ui-admincentral/apps/stkTemplateDefsApp/subApps",
                 new SetPropertyTask("config", "/modules/ui-admincentral/apps/stkTemplateDefsApp/subApps", "extends", "/modules/neat-tweaks-developers/apps/neatconfiguration/subApps")));
+        tasks.add(new IsModuleInstalledOrRegistered("STK JPG Image generator", "standard-templating-kit",
+                new BootstrapSingleResource("", "", "/standard-templating-kit/config.modules.imaging.config.generators.stk-jpg.xml")));
         return tasks;
     }
-    
+
 }
