@@ -2125,6 +2125,50 @@
               </sv:node>
             </sv:node>
           </sv:node>
+          <sv:node sv:name="openSelectedInSubapp">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+              <sv:value>mgnl:contentNode</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:mixinTypes" sv:type="Name" sv:multiple="true">
+              <sv:value>mix:lockable</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:uuid" sv:type="String">
+              <sv:value>5d683844-1af7-446a-ac48-a1c77d3189f6</sv:value>
+            </sv:property>
+            <sv:property sv:name="class" sv:type="String">
+              <sv:value>com.neatresults.mgnltweaks.ui.action.OpenSelectedInNewWindowAction$Definition</sv:value>
+            </sv:property>
+            <sv:property sv:name="icon" sv:type="String">
+              <sv:value>icon-export</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:createdBy" sv:type="String">
+              <sv:value>admin</sv:value>
+            </sv:property>
+            <sv:property sv:name="label" sv:type="String">
+              <sv:value>Open in subapp</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:activationStatus" sv:type="Boolean">
+              <sv:value>false</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:created" sv:type="Date">
+              <sv:value>2015-10-30T15:21:58.722+01:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:createdBy" sv:type="String">
+              <sv:value>superuser</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:lastActivated" sv:type="Date">
+              <sv:value>2015-10-30T15:21:58.724+01:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:lastActivatedBy" sv:type="String">
+              <sv:value>superuser</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:lastModified" sv:type="Date">
+              <sv:value>2015-10-30T15:24:55.995+01:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:lastModifiedBy" sv:type="String">
+              <sv:value>superuser</sv:value>
+            </sv:property>
+          </sv:node>
         </sv:node>
         <sv:node sv:name="actionbar">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -4747,11 +4791,34 @@
                       <sv:value>tomas</sv:value>
                     </sv:property>
                     <sv:property sv:name="mgnl:lastModified" sv:type="Date">
-                      <sv:value>2015-10-08T14:26:54.224+02:00</sv:value>
+                      <sv:value>2015-10-30T15:23:10.649+01:00</sv:value>
                     </sv:property>
                     <sv:property sv:name="mgnl:lastModifiedBy" sv:type="String">
                       <sv:value>superuser</sv:value>
                     </sv:property>
+                    <sv:node sv:name="openSelectedInSubapp">
+                      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                        <sv:value>mgnl:contentNode</sv:value>
+                      </sv:property>
+                      <sv:property sv:name="jcr:uuid" sv:type="String">
+                        <sv:value>4370b780-0e56-4c1d-a1cb-d27557729a70</sv:value>
+                      </sv:property>
+                      <sv:property sv:name="jcr:createdBy" sv:type="String">
+                        <sv:value>admin</sv:value>
+                      </sv:property>
+                      <sv:property sv:name="mgnl:created" sv:type="Date">
+                        <sv:value>2015-10-30T15:23:10.650+01:00</sv:value>
+                      </sv:property>
+                      <sv:property sv:name="mgnl:createdBy" sv:type="String">
+                        <sv:value>superuser</sv:value>
+                      </sv:property>
+                      <sv:property sv:name="mgnl:lastModified" sv:type="Date">
+                        <sv:value>2015-10-30T15:23:18.360+01:00</sv:value>
+                      </sv:property>
+                      <sv:property sv:name="mgnl:lastModifiedBy" sv:type="String">
+                        <sv:value>superuser</sv:value>
+                      </sv:property>
+                    </sv:node>
                     <sv:node sv:name="addBookmark">
                       <sv:property sv:name="jcr:primaryType" sv:type="Name">
                         <sv:value>mgnl:contentNode</sv:value>
