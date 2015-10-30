@@ -127,22 +127,27 @@ public class ConfigStatusPresenter implements ConfigStatusView.Listener {
     }
 
     protected void sourceData(String key, Object val) {
-        if (viewData.getItemProperty(key) == null) {
-            if (val instanceof String) {
+        if (val instanceof String) {
+            if (viewData.getItemProperty(key) == null) {
                 viewData.addItemProperty(key, new ObjectProperty<String>((String) val));
             } else {
-                // Creates the options container and add given options to it
-                final Container c = new IndexedContainer();
-                if (val != null) {
-                    c.addContainerProperty("name", String.class, "");
-                    for (final Iterator<?> i = ((List) val).iterator(); i.hasNext();) {
-                        Item item = c.addItem(i.next());
-                    }
-                }
-                viewData.addItemProperty(key, new ObjectProperty<Container>(c));
+                viewData.getItemProperty(key).setValue(val);
             }
         } else {
-            viewData.getItemProperty(key).setValue(val);
+            // Creates the options container and add given options to it
+            final Container c = new IndexedContainer();
+            if (val != null) {
+                c.addContainerProperty("name", String.class, "");
+                for (final Iterator<?> i = ((List) val).iterator(); i.hasNext();) {
+                    Item item = c.addItem(i.next());
+                }
+            }
+            if (viewData.getItemProperty(key) == null) {
+                viewData.addItemProperty(key, new ObjectProperty<Container>(c));
+            } else {
+                viewData.getItemProperty(key).setValue(c);
+            }
+
         }
     }
 

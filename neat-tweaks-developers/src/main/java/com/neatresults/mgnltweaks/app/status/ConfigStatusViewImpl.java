@@ -142,6 +142,7 @@ public class ConfigStatusViewImpl implements ConfigStatusView {
                 Container.Viewer field = (Container.Viewer) entry.getValue();
                 Property<?> property = dataSource.getItemProperty(entry.getKey());
                 Container c = (Container) property.getValue();
+                field.getContainerDataSource().removeAllItems();
                 field.setContainerDataSource(c);
             } else {
                 Property.Viewer field = (Property.Viewer) entry.getValue();
