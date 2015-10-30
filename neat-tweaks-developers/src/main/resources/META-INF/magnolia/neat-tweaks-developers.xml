@@ -34,7 +34,7 @@
   <dependencies>
     <dependency>
       <name>core</name>
-      <version>5.3.5/*</version>
+      <version>5.4/*</version>
     </dependency>
   <!-- Add other dependencies here, e.g the standard-templating-kit, or the multisite module with the enterprise edition. -->
     <dependency>
