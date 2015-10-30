@@ -165,9 +165,11 @@ public class ConfigStatusViewImpl implements ConfigStatusView {
         field.setNullSelectionAllowed(false);
         field.addValueChangeListener((ValueChangeEvent event) -> {
             String path = (String) event.getProperty().getValue();
-            // open app (subapp)
-            Location location = new RerootBrowserLocation("neatconfiguration", "helperBrowser", path, false);
-            adminEventBus.fireEvent(new LocationChangedEvent(location));
+            if (path != null) {
+                // open app (subapp)
+                Location location = new RerootBrowserLocation("neatconfiguration", "helperBrowser", path, false);
+                adminEventBus.fireEvent(new LocationChangedEvent(location));
+            }
 
         });
         dataBindings.put(key, field);
