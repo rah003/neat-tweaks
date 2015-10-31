@@ -87,7 +87,17 @@ public class FieldTypeSelectFieldFactory extends SelectFieldFactory<Definition> 
                         continue;
                     }
                     SelectFieldOptionDefinition field = new SelectFieldOptionDefinition();
-                    field.setLabel(fieldDef.getDefinitionClass().getName());
+                    String label = fieldDef.getDefinitionClass().getName();
+                    if (label.startsWith("com.neatresults.mgnltweaks")) {
+                        label = StringUtils.replace(label, "com.neatresults.mgnltweaks.ui.field.", " NeatTweaks ");
+                        label = StringUtils.removeEnd(label, "FieldFactory$Definition");
+                    }
+                    if (label.startsWith("info.magnolia")) {
+                        label = StringUtils.replace(label, "info.magnolia.ui.form.field.definition.", " Default ");
+                        label = StringUtils.removeStart(label, "info.magnolia.module.");
+                        label = StringUtils.removeStart(label, "info.magnolia.");
+                    }
+                    field.setLabel(label);
                     field.setName(definition.getName());
                     field.setValue(fieldDef.getDefinitionClass().getName());
                     fields.add(field);

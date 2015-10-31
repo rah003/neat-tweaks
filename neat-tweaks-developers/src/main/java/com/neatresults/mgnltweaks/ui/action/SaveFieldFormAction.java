@@ -102,11 +102,14 @@ public class SaveFieldFormAction extends AbstractAction<Definition> {
             // someone didn't set the property
             return;
         }
-        try {
-            node.setProperty(propertyName, StringUtils.trimToEmpty(((String) prop.getValue())));
-        } catch (ClassCastException e) {
-            node.setProperty(propertyName, (Boolean) prop.getValue());
+        Object val = prop.getValue();
 
+        if (val instanceof String) {
+            node.setProperty(propertyName, StringUtils.trimToEmpty(((String) prop.getValue())));
+        } else if (val instanceof Boolean) {
+            node.setProperty(propertyName, ((Boolean) val).toString());
+        } else {
+            node.setProperty(propertyName, prop.getValue().toString());
         }
     }
 
