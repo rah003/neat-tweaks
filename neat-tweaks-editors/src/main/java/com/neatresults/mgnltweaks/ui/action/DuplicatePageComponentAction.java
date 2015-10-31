@@ -27,6 +27,7 @@ package com.neatresults.mgnltweaks.ui.action;
 
 import info.magnolia.event.EventBus;
 import info.magnolia.jcr.util.NodeTypes;
+import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.templating.functions.TemplatingFunctions;
 import info.magnolia.ui.api.action.ActionExecutionException;
 import info.magnolia.ui.api.app.SubAppEventBus;
@@ -56,6 +57,7 @@ public class DuplicatePageComponentAction extends DuplicateNodeAction {
     private EventBus eventBus;
     private TemplatingFunctions templatingFunctions;
     private UiContext uiContext;
+    private JcrItemId changedId;
 
     @Inject
     public DuplicatePageComponentAction(DuplicateNodeActionDefinition definition, JcrItemAdapter item, @Named(SubAppEventBus.NAME) EventBus eventBus, TemplatingFunctions templatingFunctions, UiContext uiContext) {
@@ -71,6 +73,7 @@ public class DuplicatePageComponentAction extends DuplicateNodeAction {
         super.execute();
         try {
             Node node = (Node) item.getJcrItem();
+            NodeUtil.orderAfter((Node) JcrItemUtil.getJcrItem(changedId), node.getName());
             // need to mark page as modified manually? Why? I'd love to know too.
             NodeTypes.LastModified.update(node);
             node.getSession().save();
@@ -83,6 +86,11 @@ public class DuplicatePageComponentAction extends DuplicateNodeAction {
         }
     }
 
+    @Override
+    protected void setItemIdOfChangedItem(JcrItemId itemIdOfChangedItem) {
+        changedId = itemIdOfChangedItem;
+        super.setItemIdOfChangedItem(itemIdOfChangedItem);
+    }
 
     /**
      * Definition for action above.
