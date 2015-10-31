@@ -47,7 +47,7 @@ import com.neatresults.mgnltweaks.ui.action.OpenSelectedInNewWindowAction.Defini
 import com.neatresults.mgnltweaks.ui.contentapp.browser.RerootBrowserLocation;
 
 /**
- * Action to open a page definition.
+ * Action to open selected node in new subapp.
  */
 public class OpenSelectedInNewWindowAction extends AbstractAction<Definition> {
 
