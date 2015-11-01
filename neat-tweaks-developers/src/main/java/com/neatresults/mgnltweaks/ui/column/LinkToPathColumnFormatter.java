@@ -25,21 +25,11 @@
  */
 package com.neatresults.mgnltweaks.ui.column;
 
-import info.magnolia.context.MgnlContext;
+import static com.neatresults.mgnltweaks.ui.column.ColumnFormatterUtils.createLinkButton;
 import info.magnolia.event.EventBus;
-import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.ui.api.app.SubAppContext;
 import info.magnolia.ui.api.app.SubAppEventBus;
 import info.magnolia.ui.api.event.AdmincentralEventBus;
-import info.magnolia.ui.api.event.ContentChangedEvent;
-import info.magnolia.ui.api.location.Location;
-import info.magnolia.ui.api.location.LocationChangedEvent;
-import info.magnolia.ui.contentapp.browser.BrowserLocation;
-import info.magnolia.ui.contentapp.browser.ConfiguredBrowserSubAppDescriptor;
-import info.magnolia.ui.vaadin.integration.contentconnector.ConfiguredJcrContentConnectorDefinition;
-import info.magnolia.ui.vaadin.integration.contentconnector.ContentConnectorDefinition;
-import info.magnolia.ui.vaadin.integration.jcr.JcrItemUtil;
-import info.magnolia.ui.vaadin.integration.jcr.JcrNodeItemId;
 import info.magnolia.ui.vaadin.integration.jcr.JcrPropertyAdapter;
 import info.magnolia.ui.workbench.column.AbstractColumnFormatter;
 import info.magnolia.ui.workbench.column.definition.ColumnDefinition;
@@ -48,22 +38,15 @@ import info.magnolia.ui.workbench.column.definition.MetaDataColumnDefinition;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.jcr.Node;
 import javax.jcr.RepositoryException;
-import javax.jcr.Session;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.neatresults.mgnltweaks.NeatTweaks4DevelopersModule;
-import com.neatresults.mgnltweaks.ui.contentapp.browser.RerootBrowserLocation;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.Table;
 
 /**
@@ -106,17 +89,17 @@ public class LinkToPathColumnFormatter extends AbstractColumnFormatter<ColumnDef
                 // template ID
 
                 if ("templateScript".equals(propName) && path.startsWith("/") && path.endsWith(".ftl")) {
-                    return createLinkButton(path, "resources", path);
+                    return createLinkButton(path, "resources", path, subAppContext, adminEventBus, eventBus, module);
                 } else if ("dialog".equals(propName) || "dialogName".equals(propName)) {
                     String title = path;
                     String[] parts = path.split(":");
                     path = "/modules/" + parts[0] + "/dialogs/" + parts[1];
-                    return createLinkButton(title, "config", path);
+                    return createLinkButton(title, "config", path, subAppContext, adminEventBus, eventBus, module);
                 } else if ("id".equals(propName)) {
                     String title = path;
                     String[] parts = path.split(":");
                     path = "/modules/" + parts[0] + "/templates/" + parts[1];
-                    return createLinkButton(title, "config", path);
+                    return createLinkButton(title, "config", path, subAppContext, adminEventBus, eventBus, module);
                 } else if ("extends".equals(propName)) {
                     String title = path;
                     if (!path.startsWith("/")) {
@@ -128,7 +111,7 @@ public class LinkToPathColumnFormatter extends AbstractColumnFormatter<ColumnDef
                             path = title;
                         }
                     }
-                    return createLinkButton(title, "config", path);
+                    return createLinkButton(title, "config", path, subAppContext, adminEventBus, eventBus, module);
                 }
             }
             return path;
@@ -138,67 +121,6 @@ public class LinkToPathColumnFormatter extends AbstractColumnFormatter<ColumnDef
         }
 
         return null;
-    }
-
-    private Object createLinkButton(String title, String workspace, String path) {
-        try {
-            Session session = MgnlContext.getJCRSession(workspace);
-            String appName = null;
-            if ("resources".equals(workspace)) {
-                appName = "resources";
-                return createButton(title, appName, "browser", path, path, "");
-            } else if ("config".equals(workspace) && session.nodeExists(path)) {
-                String rootPath = "";
-                if (subAppContext.getSubAppDescriptor() instanceof ConfiguredBrowserSubAppDescriptor) {
-                    ContentConnectorDefinition connector = ((ConfiguredBrowserSubAppDescriptor) subAppContext.getSubAppDescriptor()).getContentConnector();
-                    if (connector instanceof ConfiguredJcrContentConnectorDefinition) {
-                        rootPath = ((ConfiguredJcrContentConnectorDefinition) connector).getRootPath();
-                    }
-                }
-
-                appName = subAppContext.getAppContext().getName();
-                Node node = session.getNode(path);
-                // remove relative segments from path
-                path = node.getPath();
-                return createButton(title, appName, "helperBrowser", path, new JcrNodeItemId(node.getIdentifier(), workspace), rootPath);
-            }
-        } catch (RepositoryException e) {
-            log.debug(e.getMessage(), e);
-        }
-        // need to return title (original value) as path might have been transformed already
-        return title;
-    }
-
-    private Button createButton(final String title, final String appName, final String subAppName, final String path, final Object itemId, final String rootPath) {
-        Button selectButton = new NativeButton();
-        selectButton.addStyleName("neatmagnoliabutton");
-        selectButton.setCaption(title);
-        selectButton.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                String workPath = path;
-                if (StringUtils.isNotBlank(rootPath) && !"/".equals(rootPath)) {
-                    workPath = StringUtils.removeStart(workPath, rootPath);
-                }
-                if ("browser".equals(subAppName)) {
-                    Location location = new BrowserLocation(appName, subAppName, workPath + ":treeview:");
-                    adminEventBus.fireEvent(new LocationChangedEvent(location));
-                } else {
-                    // open app (subapp)
-                    Location location = new RerootBrowserLocation(appName, subAppName, workPath, module.isShowSubtreeOnlyInHelper());
-                    adminEventBus.fireEvent(new LocationChangedEvent(location));
-                    // expand selected node
-                    try {
-                        ContentChangedEvent cce = new ContentChangedEvent(JcrItemUtil.getItemId(RepositoryConstants.CONFIG, path), true);
-                        eventBus.fireEvent(cce);
-                    } catch (RepositoryException e) {
-                        log.error("Ooops, failed to retrieve node at path {} and open it while trying to open definition with {}", path, e.getMessage(), e);
-                    }
-                }
-            }
-        });
-        return selectButton;
     }
 
     /**

@@ -31,7 +31,6 @@ import info.magnolia.ui.api.app.SubAppContext;
 import info.magnolia.ui.api.app.SubAppEventBus;
 import info.magnolia.ui.api.availability.AvailabilityChecker;
 import info.magnolia.ui.api.event.AdmincentralEventBus;
-import info.magnolia.ui.api.event.ContentChangedEvent;
 import info.magnolia.ui.api.location.Location;
 import info.magnolia.ui.contentapp.ContentSubAppView;
 import info.magnolia.ui.contentapp.browser.BrowserLocation;
@@ -46,15 +45,16 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Detail BrowserSubApp used to open more instances of browser in the app, just like if they were details.
  */
 public class DetailBrowserSubApp extends BrowserSubApp {
 
+    private static final Logger log = LoggerFactory.getLogger(DetailBrowserSubApp.class);
     private String caption;
-    private EventBus adminCentralEventBus;
-    private ContentChangedEvent invokeLater = null;
     private WorkbenchPresenter workbenchPresenter;
     private String rootPath;
     private EventBus subAppEventBus;
@@ -63,7 +63,6 @@ public class DetailBrowserSubApp extends BrowserSubApp {
     public DetailBrowserSubApp(ActionExecutor actionExecutor, final SubAppContext subAppContext, final ContentSubAppView view, final BrowserPresenter browser, final @Named(SubAppEventBus.NAME) EventBus subAppEventBus,
             @Named(AdmincentralEventBus.NAME) EventBus adminCentralEventBus, ContentConnector contentConnector, AvailabilityChecker checker) {
         super(actionExecutor, subAppContext, view, browser, subAppEventBus, adminCentralEventBus, contentConnector, checker);
-        this.adminCentralEventBus = adminCentralEventBus;
         this.subAppEventBus = subAppEventBus;
         Field field;
         try {
@@ -71,7 +70,7 @@ public class DetailBrowserSubApp extends BrowserSubApp {
             field.setAccessible(true);
             workbenchPresenter = (WorkbenchPresenter) field.get(browser);
         } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
-            e.printStackTrace();
+            log.error("Ooops, your security config might be too tight. Failed to force access to workbench presenter with {}", e.getMessage(), e);
         }
     }
 
@@ -102,6 +101,10 @@ public class DetailBrowserSubApp extends BrowserSubApp {
         super.locationChanged(location);
         if (rootPath == null && location instanceof RerootBrowserLocation) {
             rootPath = ((RerootBrowserLocation) location).getNodePath();
+            subAppEventBus.fireEvent(new ContainerPathChangedEvent(rootPath));
+        }
+        if (rootPath == null && location instanceof QueryableBrowserLocation) {
+            rootPath = ((QueryableBrowserLocation) location).getNodePath();
             subAppEventBus.fireEvent(new ContainerPathChangedEvent(rootPath));
         }
     }
