@@ -34,7 +34,6 @@ import info.magnolia.ui.api.event.AdmincentralEventBus;
 import info.magnolia.ui.api.event.ContentChangedEvent;
 import info.magnolia.ui.api.location.Location;
 import info.magnolia.ui.api.location.LocationChangedEvent;
-import info.magnolia.ui.api.location.LocationController;
 import info.magnolia.ui.contentapp.browser.BrowserLocation;
 import info.magnolia.ui.contentapp.browser.ConfiguredBrowserSubAppDescriptor;
 import info.magnolia.ui.vaadin.integration.contentconnector.ConfiguredJcrContentConnectorDefinition;
@@ -73,16 +72,14 @@ import com.vaadin.ui.Table;
 public class LinkToPathColumnFormatter extends AbstractColumnFormatter<ColumnDefinition> implements ColumnFormatter {
 
     private static final Logger log = LoggerFactory.getLogger(LinkToPathColumnFormatter.class);
-    private LocationController locationController;
     private EventBus adminEventBus;
     private EventBus eventBus;
     private SubAppContext subAppContext;
     private NeatTweaks4DevelopersModule module;
 
     @Inject
-    public LinkToPathColumnFormatter(Definition definition, LocationController locationController, @Named(AdmincentralEventBus.NAME) final EventBus adminEventBus, @Named(SubAppEventBus.NAME) final EventBus eventBus, SubAppContext subAppContext, NeatTweaks4DevelopersModule module) {
+    public LinkToPathColumnFormatter(Definition definition, @Named(AdmincentralEventBus.NAME) final EventBus adminEventBus, @Named(SubAppEventBus.NAME) final EventBus eventBus, SubAppContext subAppContext, NeatTweaks4DevelopersModule module) {
         super(definition);
-        this.locationController = locationController;
         this.adminEventBus = adminEventBus;
         this.eventBus = eventBus;
         this.subAppContext = subAppContext;
@@ -135,6 +132,9 @@ public class LinkToPathColumnFormatter extends AbstractColumnFormatter<ColumnDef
                 }
             }
             return path;
+        }
+        if (prop != null && prop.getValue() != null) {
+            return "" + prop.getValue();
         }
 
         return null;
