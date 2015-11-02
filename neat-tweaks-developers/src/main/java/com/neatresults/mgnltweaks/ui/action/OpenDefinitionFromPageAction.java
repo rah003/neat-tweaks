@@ -107,7 +107,7 @@ public class OpenDefinitionFromPageAction extends AbstractAction<Definition> {
             }
 
             // open subapp
-            Location location = new RerootBrowserLocation("neatconfiguration", "helperBrowser", templatePath, module.isShowSubtreeOnlyInHelper());
+            Location location = new RerootBrowserLocation("neatconfiguration", "helperBrowser", templatePath + ":treeview:", module.isShowSubtreeOnlyInHelper());
             eventBus.fireEvent(new LocationChangedEvent(location));
             // open selected node
             try {
@@ -116,12 +116,14 @@ public class OpenDefinitionFromPageAction extends AbstractAction<Definition> {
             } catch (RepositoryException e) {
                 log.error("Ooops, failed to retrieve node at path {} and open it while trying to open definition with {}", path, e.getMessage(), e);
             }
+            // funny as it looks we need to send the event twice in order to make sure proper sub app is selected in case the app is not open yet
+            // (that's the only case identified so far where selecting the subapp would not work w/o double event posting)
+            eventBus.fireEvent(new LocationChangedEvent(location));
 
         } catch (RepositoryException e) {
             throw new ActionExecutionException(e);
         }
     }
-
 
     /**
      * Definition for the above class.
