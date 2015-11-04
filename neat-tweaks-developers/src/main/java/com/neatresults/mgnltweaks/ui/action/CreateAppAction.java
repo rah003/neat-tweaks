@@ -120,7 +120,7 @@ public class CreateAppAction extends SaveConfigDialogAction {
                         MgnlContext.setInstance(groovyCtx);
                         MgnlGroovyConsole console = new MgnlGroovyConsole(new Binding());
 
-                        String inputFile = "/appCreationScript.groovy";
+                        String inputFile = "/neat-tweaks-developers/appCreationScript.groovy";
                         // First Check
                         URL inFile = ClasspathResourcesUtil.getResource(inputFile);
                         if (inFile == null) {
