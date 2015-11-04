@@ -125,7 +125,7 @@ public class SaveConfigAddNodeDialogAction extends SaveConfigDialogAction {
                         if (nodeAdapter.getItemProperty("value") != null) {
                             value = ((String) nodeAdapter.getItemProperty("value").getValue());
                         }
-                        node.setProperty(propertyName, value);
+                        node.setProperty(propertyName, value == null ? "" : value);
                     }
                     node.getSession().save();
                     Location location = subAppContext.getLocation();
