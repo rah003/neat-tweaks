@@ -22,17 +22,17 @@ Maven dependency
     <dependency>
       <groupId>com.neatresults.mgnltweaks</groupId>
       <artifactId>neat-tweaks-editors</artifactId>
-      <version>2.0.1</version>
+      <version>2.0.2</version>
     </dependency>
     <dependency>
       <groupId>com.neatresults.mgnltweaks</groupId>
       <artifactId>neat-tweaks-developers</artifactId>
-      <version>2.0.1</version>
+      <version>2.0.2</version>
     </dependency>
     <dependency>
       <groupId>com.neatresults.mgnltweaks</groupId>
       <artifactId>neat-tweaks-commons</artifactId>
-      <version>2.0.1</version>
+      <version>2.0.2</version>
     </dependency>
 ```
 
@@ -43,7 +43,7 @@ Modules will install and most of the tweaks will also work with Magnolia 5.4, bu
 
 In case you want to just try out in existing installation without need to build everything, please download whole bundle and drop it in your WEB-INF/lib folder. Bundle can be found at https://nexus.magnolia-cms.com/content/repositories/magnolia.forge.releases/com/neatresults/mgnltweaks/neat-tweaks-bundle/1.0.2/neat-tweaks-bundle-1.0.2.zip
 or for Magnolia 5.4.x please use:
-https://nexus.magnolia-cms.com/content/repositories/magnolia.forge.releases/com/neatresults/mgnltweaks/neat-tweaks-bundle/2.0.1/neat-tweaks-bundle-2.0.1.zip
+https://nexus.magnolia-cms.com/content/repositories/magnolia.forge.releases/com/neatresults/mgnltweaks/neat-tweaks-bundle/2.0.2/neat-tweaks-bundle-2.0.2.zip
 
 Installation & updates 
 -----------------
