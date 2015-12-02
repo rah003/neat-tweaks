@@ -47,4 +47,6 @@ https://nexus.magnolia-cms.com/content/repositories/magnolia.forge.releases/com/
 
 Installation & updates 
 -----------------
+To install the above tweaks successfully, you need to modify the theme of Magnolia. To do so, change your magnolia.ui.vaadin.theme property in magnolia.properties file to either neatcentral53 in Magnolia 5.3, or to neatcentral54 in Magnolia 5.4. If you are using a custom theme already, you can merge the two themes together and name the result neatcentral-anything-you-want.
+
 Currently there are no update tasks for updates between different versions. If you are updating, you need to remove module first and perform full install. At the moment I'm not planning to add support for updates so don't bother reporting those as issues w/o providing patches at the same time. 
