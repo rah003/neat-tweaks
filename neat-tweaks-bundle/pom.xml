@@ -19,6 +19,20 @@
           <appendAssemblyId>false</appendAssemblyId>
         </configuration>
       </plugin>
+<!-- To get rid of: [ERROR] Failed to execute goal org.apache.maven.plugins:maven-remote-resources-plugin:1.5:process (magnolia-build-resources-remote-resources) on project neat-tweaks-bundle: Error rendering velocity resource. NullPointerException -> [Help 1]
+also known as https://issues.apache.org/jira/browse/MSHARED-319 -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-remote-resources-plugin</artifactId>
+        <version>1.5</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.maven.shared</groupId>
+            <artifactId>maven-filtering</artifactId>
+            <version>1.2</version>
+          </dependency>
+        </dependencies>
+      </plugin>
     </plugins>
     <!-- default resources configuration which will filter your module descriptors -->
     <resources>
