@@ -62,7 +62,7 @@ public class NeatTweaks4DevelopersVersionHandler extends DefaultNeatVersionHandl
         tasks.add(new NodeExistsDelegateTask("", "/modules/ui-admincentral/apps/stkTemplateDefsApp/subApps",
                 new SetPropertyTask("config", "/modules/ui-admincentral/apps/stkTemplateDefsApp/subApps", "extends", "/modules/neat-tweaks-developers/apps/neatconfiguration/subApps")));
         tasks.add(new IsModuleInstalledOrRegistered("STK JPG Image generator", "standard-templating-kit",
-                new BootstrapSingleResource("", "", "/standard-templating-kit/config.modules.imaging.config.generators.stk-jpg.xml")));
+                new BootstrapSingleResource("", "", "/mgnl-bootstrap/standard-templating-kit/config.modules.imaging.config.generators.stk-jpg.xml")));
         return tasks;
     }
 
