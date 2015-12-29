@@ -25,6 +25,19 @@
  */
 package com.neatresults.mgnltweaks.ui.action;
 
+import java.util.Arrays;
+import java.util.HashSet;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.vaadin.data.Item;
+
 import info.magnolia.event.EventBus;
 import info.magnolia.ui.admincentral.dialog.action.SaveConfigDialogAction;
 import info.magnolia.ui.admincentral.dialog.action.SaveConfigDialogActionDefinition;
@@ -39,19 +52,6 @@ import info.magnolia.ui.vaadin.integration.jcr.JcrPropertyAdapter;
 import info.magnolia.ui.vaadin.integration.jcr.JcrPropertyItemId;
 import info.magnolia.ui.workbench.event.SelectionChangedEvent;
 
-import java.util.Arrays;
-import java.util.HashSet;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.vaadin.data.Item;
-
 /**
  * Dialog action that saves result of the dialog as property rather than node.
  */
@@ -61,7 +61,7 @@ public class SaveConfigPropertyDialogAction extends SaveConfigDialogAction {
     private final EventBus eventBus;
 
     @Inject
-    public SaveConfigPropertyDialogAction(SaveConfigDialogActionDefinition definition, Item item, EditorValidator validator, EditorCallback callback, final @Named(SubAppEventBus.NAME) EventBus eventBus) {
+    public SaveConfigPropertyDialogAction(Definition definition, Item item, EditorValidator validator, EditorCallback callback, final @Named(SubAppEventBus.NAME) EventBus eventBus) {
         super(definition, item, validator, callback, eventBus);
         this.eventBus = eventBus;
     }
