@@ -25,14 +25,6 @@
  */
 package com.neatresults.mgnltweaks;
 
-import info.magnolia.context.MgnlContext;
-import info.magnolia.jcr.iterator.FilteringNodeIterator;
-import info.magnolia.jcr.predicate.AbstractPredicate;
-import info.magnolia.jcr.util.NodeUtil;
-import info.magnolia.module.ModuleLifecycle;
-import info.magnolia.module.ModuleLifecycleContext;
-import info.magnolia.repository.RepositoryConstants;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -42,13 +34,27 @@ import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.collect.Ordering;
+
+import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.iterator.FilteringNodeIterator;
+import info.magnolia.jcr.predicate.AbstractPredicate;
+import info.magnolia.jcr.util.NodeUtil;
+import info.magnolia.module.ModuleLifecycle;
+import info.magnolia.module.ModuleLifecycleContext;
+import info.magnolia.repository.RepositoryConstants;
 
 /**
  * NeatTweaks4DevelopersModule class.
  */
 public class NeatTweaks4DevelopersModule implements ModuleLifecycle {
 
+    private static final Logger log = LoggerFactory.getLogger(NeatTweaks4DevelopersModule.class);
+
+    private boolean forceModuleOrder = true;
     private boolean showSubtreeOnlyInHelper = true;
     private List<ModuleName> preferredModules = new ArrayList<ModuleName>();
 
@@ -79,18 +85,21 @@ public class NeatTweaks4DevelopersModule implements ModuleLifecycle {
             // this is for modules
             for (Node n : orderedModules) {
                 modules.orderBefore(n.getName(), null);
-                List<Node> ordered = orderChildNodes(n);
-                // by order, place all at the end of the list
-                // this is for apps, templates, and other nodes under each module
-                for (Node o : ordered) {
-                    n.orderBefore(o.getName(), null);
+                try {
+                    List<Node> ordered = orderChildNodes(n);
+                    // by order, place all at the end of the list
+                    // this is for apps, templates, and other nodes under each module
+                    for (Node o : ordered) {
+                        n.orderBefore(o.getName(), null);
+                    }
+                } catch (RepositoryException e) {
+                    log.debug(e.getMessage(), e);
                 }
-
             }
             // save
             configSession.save();
         } catch (RepositoryException e) {
-
+            log.debug(e.getMessage(), e);
         }
     }
 
@@ -140,6 +149,14 @@ public class NeatTweaks4DevelopersModule implements ModuleLifecycle {
 
     public void setPreferredModules(List<ModuleName> preferredModules) {
         this.preferredModules = preferredModules;
+    }
+
+    public boolean isForceModuleOrder() {
+        return forceModuleOrder;
+    }
+
+    public void setForceModuleOrder(boolean forceModuleOrder) {
+        this.forceModuleOrder = forceModuleOrder;
     }
 
 }
