@@ -60,7 +60,9 @@ public class NeatTweaks4DevelopersModule implements ModuleLifecycle {
 
     @Override
     public void start(ModuleLifecycleContext ctx) {
-        orderModules();
+        if (forceModuleOrder) {
+            orderModules();
+        }
     }
 
     /**
