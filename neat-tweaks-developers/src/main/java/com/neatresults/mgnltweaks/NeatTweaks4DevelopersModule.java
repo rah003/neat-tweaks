@@ -61,6 +61,7 @@ public class NeatTweaks4DevelopersModule implements ModuleLifecycle {
     @Override
     public void start(ModuleLifecycleContext ctx) {
         if (forceModuleOrder) {
+            log.error("Will commence module reordering");
             orderModules();
         }
     }
@@ -72,7 +73,8 @@ public class NeatTweaks4DevelopersModule implements ModuleLifecycle {
         try {
             Session configSession = MgnlContext.getJCRSession(RepositoryConstants.CONFIG);
             Node modules = configSession.getNode("/modules");
-            List<Node> orderedModules = orderChildNodes(modules);
+            List<Node> natural = getChildList(modules);
+            List<Node> orderedModules = orderChildNodes(natural);
             // break out order for preferred modules and put those on top of the list
             for (ModuleName name : preferredModules) {
                 for (Node n : orderedModules) {
@@ -83,16 +85,41 @@ public class NeatTweaks4DevelopersModule implements ModuleLifecycle {
                     }
                 }
             }
+
+            boolean needResort = false;
+            for (int idx = 0; idx < natural.size(); idx++) {
+                if (natural.get(idx) != orderedModules.get(idx)) {
+                    // need to get sorted
+                    needResort = true;
+                    break;
+                }
+            }
+
+            log.info("Need to reorder modules? " + needResort);
+
             // by order, place all at the end of the list
             // this is for modules
             for (Node n : orderedModules) {
-                modules.orderBefore(n.getName(), null);
+                if (needResort) {
+                    modules.orderBefore(n.getName(), null);
+                }
                 try {
-                    List<Node> ordered = orderChildNodes(n);
-                    // by order, place all at the end of the list
-                    // this is for apps, templates, and other nodes under each module
-                    for (Node o : ordered) {
-                        n.orderBefore(o.getName(), null);
+                    List<Node> naturalChildren = getChildList(n);
+                    List<Node> ordered = orderChildNodes(naturalChildren);
+                    boolean needChildResort = false;
+                    for (int idx = 0; idx < naturalChildren.size(); idx++) {
+                        if (naturalChildren.get(idx) != ordered.get(idx)) {
+                            // need to get sorted
+                            needChildResort = true;
+                            break;
+                        }
+                    }
+                    if (needChildResort) {
+                        // by order, place all at the end of the list
+                        // this is for apps, templates, and other nodes under each module
+                        for (Node o : ordered) {
+                            n.orderBefore(o.getName(), null);
+                        }
                     }
                 } catch (RepositoryException e) {
                     log.debug(e.getMessage(), e);
@@ -105,9 +132,8 @@ public class NeatTweaks4DevelopersModule implements ModuleLifecycle {
         }
     }
 
-    private List<Node> orderChildNodes(Node parent) throws RepositoryException {
+    private List<Node> getChildList(Node parent) throws RepositoryException {
         NodeIterator iter = new FilteringNodeIterator(parent.getNodes(), new AbstractPredicate<Node>() {
-
             @Override
             public boolean evaluateTyped(Node t) {
                 try {
@@ -118,6 +144,10 @@ public class NeatTweaks4DevelopersModule implements ModuleLifecycle {
                 }
             }
         });
+        return new ArrayList<Node>(NodeUtil.getCollectionFromNodeIterator(iter));
+    }
+
+    private List<Node> orderChildNodes(List<Node> natural) throws RepositoryException {
         Comparator<Node> comparator = new Comparator<Node>() {
             @Override
             public int compare(Node o1, Node o2) {
@@ -128,8 +158,10 @@ public class NeatTweaks4DevelopersModule implements ModuleLifecycle {
                 }
             }
         };
+
         // order them
-        return Ordering.from(comparator).sortedCopy(NodeUtil.asIterable(iter));
+        return Ordering.from(comparator).sortedCopy(natural);
+
     }
 
     @Override
