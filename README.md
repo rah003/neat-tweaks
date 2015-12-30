@@ -57,9 +57,11 @@ Changes
 - #6 prevent unnecessary reodering of modules on startup
 - some utils for working with JCR API and Streams API of Java 8 (conversion of iterators in streams and so on).
 - bootstrap custom image generator for STK only when STK is installed 
+
 2.0.2
 - fixed link to groovy script for app creation
 - handle properties w/ null value correctly
+
 2.0.1
 - fixed issue with config subapp not being selected correctly when opening subapp from another app (pages)
 - added action to list usages of given node throughout repository
