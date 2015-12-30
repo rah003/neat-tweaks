@@ -9,7 +9,7 @@
   <groupId>com.neatresults.mgnltweaks</groupId>
   <artifactId>neat-tweaks-project</artifactId>
   <name>neat-tweaks-project (parent pom)</name>
-  <version>2.0.3-SNAPSHOT</version>
+  <version>2.0.3</version>
   <packaging>pom</packaging>
 
   <properties>
@@ -21,8 +21,8 @@
   <scm>
     <connection>scm:git:https://github.com/rah003/neat-tweaks.git</connection>
     <developerConnection>scm:git:https://github.com/rah003/neat-tweaks.git</developerConnection>
-    <url></url>
-    <tag>HEAD</tag>
+    <url />
+    <tag>neat-tweaks-project-2.0.3</tag>
   </scm>
 
   <dependencyManagement>
