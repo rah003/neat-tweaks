@@ -25,18 +25,19 @@
  */
 package com.neatresults.mgnltweaks.ui.action;
 
+import javax.jcr.Node;
+import javax.jcr.Property;
+import javax.jcr.RepositoryException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.SessionUtil;
 import info.magnolia.ui.api.availability.AbstractAvailabilityRule;
 import info.magnolia.ui.api.availability.ConfiguredAvailabilityRuleDefinition;
 import info.magnolia.ui.vaadin.integration.jcr.JcrItemId;
 import info.magnolia.ui.vaadin.integration.jcr.JcrPropertyItemId;
-
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * ByPathAvailabilityRule using regex property from definition allows limiting availability by path.
@@ -61,6 +62,14 @@ public class ByPathAvailabilityRule extends AbstractAvailabilityRule {
                 } catch (RepositoryException e) {
                     log.warn("Error evaluating availability for node [{}], returning false: {}", NodeUtil.getPathIfPossible(node), e.getMessage());
                 }
+            }
+        } else if (itemId instanceof JcrPropertyItemId) {
+            JcrPropertyItemId jcrItemId = (JcrPropertyItemId) itemId;
+            try {
+                Property p = SessionUtil.getNodeByIdentifier(jcrItemId.getWorkspace(), jcrItemId.getUuid()).getProperty(jcrItemId.getPropertyName());
+                return p.getPath().matches(definition.getRegex());
+            } catch (RepositoryException e) {
+                log.warn("Error evaluating availability for property [{}:{}/{}], returning false: {}", jcrItemId.getWorkspace(), jcrItemId.getUuid(), jcrItemId.getPropertyName(), e.getMessage());
             }
         }
         return false;
