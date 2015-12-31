@@ -25,22 +25,8 @@
  */
 package com.neatresults.mgnltweaks.ui.action;
 
-import info.magnolia.cms.beans.config.MIMEMapping;
-import info.magnolia.cms.core.Path;
-import info.magnolia.commands.CommandsManager;
-import info.magnolia.commands.impl.ExportCommand;
-import info.magnolia.i18nsystem.SimpleTranslator;
-import info.magnolia.importexport.DataTransporter;
-import info.magnolia.ui.api.action.ActionExecutionException;
-import info.magnolia.ui.api.context.UiContext;
-import info.magnolia.ui.framework.action.ExportAction;
-import info.magnolia.ui.framework.action.ExportActionDefinition;
-import info.magnolia.ui.framework.util.TempFileStreamResource;
-import info.magnolia.ui.vaadin.integration.jcr.JcrItemAdapter;
-
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
@@ -49,6 +35,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.inject.Inject;
+import javax.jcr.Item;
 
 import org.apache.commons.compress.archivers.ArchiveOutputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
@@ -59,10 +46,22 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.server.Page;
 
+import info.magnolia.cms.beans.config.MIMEMapping;
+import info.magnolia.commands.CommandsManager;
+import info.magnolia.commands.impl.ExportCommand;
+import info.magnolia.i18nsystem.SimpleTranslator;
+import info.magnolia.ui.api.action.ActionExecutionException;
+import info.magnolia.ui.api.context.UiContext;
+import info.magnolia.ui.framework.action.AbstractCommandAction;
+import info.magnolia.ui.framework.action.ExportAction;
+import info.magnolia.ui.framework.action.ExportActionDefinition;
+import info.magnolia.ui.framework.util.TempFileStreamResource;
+import info.magnolia.ui.vaadin.integration.jcr.JcrItemAdapter;
+
 /**
  * Action for multiple nodes in xml format.
  */
-public class ExportMultipleAction extends ExportAction {
+public class ExportMultipleAction extends AbstractCommandAction<ExportActionDefinition> {
     private final Logger log = LoggerFactory.getLogger(ExportMultipleAction.class);
     private FileOutputStream fileOutputStream;
     private Map<String, File> tempFiles = new HashMap<String, File>();
@@ -74,43 +73,28 @@ public class ExportMultipleAction extends ExportAction {
     public ExportMultipleAction(Definition definition, List<JcrItemAdapter> items, CommandsManager commandsManager, UiContext uiContext, SimpleTranslator i18n) throws ActionExecutionException {
         super(definition, items.get(0), commandsManager, uiContext, i18n);
         // export action doesn't expose init for setting all items so we got to work around
+        // by getting pointer to a list of items in AbstractCommandAction
         List<JcrItemAdapter> list = getItems();
         // first item would be already in the list, clear it out
         list.clear();
+        // and adding all items to that list manually.
         list.addAll(items);
-    }
-
-    /**
-     * Export each selected file in a temp file.
-     */
-    @Override
-    protected void executeOnItem(JcrItemAdapter item) throws ActionExecutionException {
-        try {
-            ExportCommand exportCommand = (ExportCommand) getCommand();
-            // Create a temporary file that will hold the data created by the export command.
-            fileOutput = File.createTempFile(item.getItemId().getUuid(), exportCommand.getExt(), Path.getTempDirectory());
-
-            String pathName = DataTransporter.createExportPath(item.getWorkspace() + item.getJcrItem().getPath());
-            pathName = DataTransporter.encodePath(pathName, DataTransporter.DOT, DataTransporter.UTF8);
-
-            tempFiles.put(pathName + exportCommand.getExt(), fileOutput);
-            // Create a FileOutputStream link to the temporary file. The command use this FileOutputStream to populate data.
-            fileOutputStream = new FileOutputStream(fileOutput);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new ActionExecutionException("Not able to create a temporary file.", e);
-        }
-        super.executeOnItem(item);
+        // and pray that noone ever changes ACA to return copy of item list instead
     }
 
     @Override
     protected void onPreExecute() throws Exception {
-        if (tempFileStreamResource == null) {
+        if (getItems().size() > 1) {
+            fileOutput = File.createTempFile(getCurrentItem().getItemId().getUuid(), ".xml");
+        } else {
             tempFileStreamResource = new TempFileStreamResource();
-            tempFileStreamResource.setTempFileName("magnoliaExport" + (Math.random() * 1000));
-            tempFileStreamResource.setTempFileExtension("zip");
+            tempFileStreamResource.setTempFileName(getCurrentItem().getItemId().getUuid());
+            tempFileStreamResource.setTempFileExtension("xml");
         }
+        // gotta call super or buildParam() will never get called and thus final getParam() will fail w/ NPE (facepalm)
+        super.onPreExecute();
     }
+
     /**
      * Once all items are exported, zip it all and send to client.
      */
@@ -119,12 +103,22 @@ public class ExportMultipleAction extends ExportAction {
         IOUtils.closeQuietly(fileOutputStream);
         postExecCount++;
 
-        String fileName;
-        String mimeType;
-        if (getItems().size() > 1 && postExecCount == getItems().size()) {
-            fileName = "magnoliaExport.zip";
-            mimeType = MIMEMapping.getMIMEType("zip");
+        if (getItems().size() > 1) {
+            ExportCommand exportCommand = (ExportCommand) getCommand();
+            String fileName = exportCommand.getFileName();
+            tempFiles.put(fileName, fileOutput);
 
+        }
+        if (getItems().size() > 1 && postExecCount == getItems().size()) {
+            // last run on multi-run
+            String fileName = "magnoliaExport.zip";
+            String mimeType = MIMEMapping.getMIMEType("zip");
+
+
+            // will get deleted by stream after it is streamed through http request
+            TempFileStreamResource tempFileStreamResource = new TempFileStreamResource();
+            tempFileStreamResource.setTempFileName("magnoliaExport" + (Math.random() * 1000));
+            tempFileStreamResource.setTempFileExtension("zip");
             ArchiveOutputStream zipOutput = new ArchiveStreamFactory().createArchiveOutputStream("zip", tempFileStreamResource.getTempFileOutputStream());
             try {
 
@@ -139,45 +133,49 @@ public class ExportMultipleAction extends ExportAction {
                 zipOutput.finish();
                 IOUtils.closeQuietly(zipOutput);
             }
-
-        } else {
-            ExportCommand exportCommand = (ExportCommand) getCommand();
-            fileName = exportCommand.getFileName();
-            mimeType = exportCommand.getMimeExtension();
-
-        }
-        if (postExecCount == getItems().size()) {
             tempFileStreamResource.setFilename(fileName);
             tempFileStreamResource.setMIMEType(mimeType);
             // is this really necessary?
             tempFileStreamResource.getStream().setParameter("Content-Disposition", "attachment; filename=" + fileName + "\"");
             // Opens the resource for download
             Page.getCurrent().open(tempFileStreamResource, "", true);
-        }
 
+        } else if (getItems().size() == 1) {
+            // single item run
+            final ExportCommand exportCommand = (ExportCommand) getCommand();
+            tempFileStreamResource.setFilename(exportCommand.getFileName());
+            tempFileStreamResource.setMIMEType(exportCommand.getMimeExtension());
+            // Opens the resource for download
+            Page.getCurrent().open(tempFileStreamResource, "", true);
+        }
+    }
+
+    @Override
+    protected Map<String, Object> buildParams(final Item jcrItem) {
+        Map<String, Object> params = super.buildParams(jcrItem);
+        params.put(ExportCommand.EXPORT_EXTENSION, ".xml");
+        params.put(ExportCommand.EXPORT_FORMAT, Boolean.TRUE);
+        params.put(ExportCommand.EXPORT_KEEP_HISTORY, Boolean.FALSE);
+        try {
+            if (getItems().size() > 1) {
+                params.put(ExportCommand.EXPORT_OUTPUT_STREAM, new FileOutputStream(fileOutput));
+            } else {
+                params.put(ExportCommand.EXPORT_OUTPUT_STREAM, tempFileStreamResource.getTempFileOutputStream());
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to bind command to temp file output stream: ", e);
+        }
+        return params;
     }
 
     /**
-     * Implementation of {@link FileInputStream} that ensure that the {@link File} <br>
-     * used to construct this class is deleted on close() call.
+     * Once all items are exported, zip it all and send to client.
      */
-    private class DeleteOnCloseFileInputStream extends FileInputStream {
-        private File file;
-        private final Logger log = LoggerFactory.getLogger(DeleteOnCloseFileInputStream.class);
-
-        public DeleteOnCloseFileInputStream(File file) throws FileNotFoundException {
-            super(file);
-            this.file = file;
-        }
-
-        @Override
-        public void close() throws IOException {
-            super.close();
-            if (file.exists() && !file.delete()) {
-                log.warn("Could not delete temporary export file {}", file.getAbsolutePath());
-            }
-        }
-
+    @Override
+    protected void onError(Exception e) {
+        IOUtils.closeQuietly(fileOutputStream);
+        log.error("Failed to export multiple items with {}", e.getMessage(), e);
+        super.onError(e);
     }
 
     /**
