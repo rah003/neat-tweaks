@@ -51,7 +51,7 @@ To install the above tweaks successfully, you need to modify the theme of Magnol
 
 Currently there are no update tasks for updates between different versions. If you are updating, you need to remove module first and perform full install. At the moment I'm not planning to add support for updates so don't bother reporting those as issues w/o providing patches at the same time. 
 
-Changes
+Changes 2.x
 -----------------
 2.0.3
 - #6 prevent unnecessary reodering of modules on startup
@@ -66,4 +66,10 @@ Changes
 - fixed issue with config subapp not being selected correctly when opening subapp from another app (pages)
 - added action to list usages of given node throughout repository
 - changed duplication of components in Pages app to place duplicated component directly after original instead of at the end
-- fixed issue w/ empty selection in extends overview when no broken nodes are present
+- fixed issue w/ empty selection in extends overview when no broken nodes are present 
+
+Changes 1.x
+-----------------
+1.0.4
+- fixed #6 prevent unnecessary reodering of modules on startup
+- added support for preferred modules same as in 2.x branch
