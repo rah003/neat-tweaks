@@ -26,6 +26,7 @@
 package com.neatresults.mgnltweaks.ui.column;
 
 import static com.neatresults.mgnltweaks.ui.column.ColumnFormatterUtils.createLinkButton;
+
 import info.magnolia.event.EventBus;
 import info.magnolia.ui.api.app.SubAppContext;
 import info.magnolia.ui.api.app.SubAppEventBus;
@@ -98,6 +99,9 @@ public class LinkToPathColumnFormatter extends AbstractColumnFormatter<ColumnDef
                 } else if ("id".equals(propName)) {
                     String title = path;
                     String[] parts = path.split(":");
+                    if (parts.length != 2) {
+                        return path;
+                    }
                     path = "/modules/" + parts[0] + "/templates/" + parts[1];
                     return createLinkButton(title, "config", path, subAppContext, adminEventBus, eventBus, module);
                 } else if ("extends".equals(propName)) {
