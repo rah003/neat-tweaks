@@ -22,17 +22,17 @@ Maven dependency
     <dependency>
       <groupId>com.neatresults.mgnltweaks</groupId>
       <artifactId>neat-tweaks-editors</artifactId>
-      <version>2.0.3</version>
+      <version>2.0.4</version>
     </dependency>
     <dependency>
       <groupId>com.neatresults.mgnltweaks</groupId>
       <artifactId>neat-tweaks-developers</artifactId>
-      <version>2.0.3</version>
+      <version>2.0.4</version>
     </dependency>
     <dependency>
       <groupId>com.neatresults.mgnltweaks</groupId>
       <artifactId>neat-tweaks-commons</artifactId>
-      <version>2.0.3</version>
+      <version>2.0.4</version>
     </dependency>
 ```
 
@@ -41,9 +41,9 @@ Versions
 Version 1.0.x compatible with Magnolia 5.3.x
 Modules will install and most of the tweaks will also work with Magnolia 5.4, but sou will be definitely better of using 2.0.x version from master if you want to run tweaks on Magnolia 5.4.x. If you encounter any issues please report them back (ideally with attached patch :D ).
 
-In case you want to just try out in existing installation without need to build everything, please download whole bundle and drop it in your WEB-INF/lib folder. Bundle can be found at https://nexus.magnolia-cms.com/content/repositories/magnolia.forge.releases/com/neatresults/mgnltweaks/neat-tweaks-bundle/1.0.4/neat-tweaks-bundle-1.0.4.zip
+In case you want to just try out in existing installation without need to build everything, please download whole bundle and drop it in your WEB-INF/lib folder. Bundle can be found at https://nexus.magnolia-cms.com/content/repositories/magnolia.forge.releases/com/neatresults/mgnltweaks/neat-tweaks-bundle/1.0.5/neat-tweaks-bundle-1.0.5.zip
 or for Magnolia 5.4.x please use:
-https://nexus.magnolia-cms.com/content/repositories/magnolia.forge.releases/com/neatresults/mgnltweaks/neat-tweaks-bundle/2.0.3/neat-tweaks-bundle-2.0.3.zip
+https://nexus.magnolia-cms.com/content/repositories/magnolia.forge.releases/com/neatresults/mgnltweaks/neat-tweaks-bundle/2.0.4/neat-tweaks-bundle-2.0.4.zip
 
 Installation & updates 
 -----------------
@@ -53,6 +53,8 @@ Currently there are no update tasks for updates between different versions. If y
 
 Changes 2.x
 -----------------
+2.0.4
+- #7 fixed editor error when editing id property w/ non-id like value
 2.0.3
 - #6 prevent unnecessary reodering of modules on startup
 - some utils for working with JCR API and Streams API of Java 8 (conversion of iterators in streams and so on).
@@ -70,6 +72,8 @@ Changes 2.x
 
 Changes 1.x
 -----------------
+1.0.5
+- #7 fixed editor error when editing id property w/ non-id like value
 1.0.4
 - fixed #6 prevent unnecessary reodering of modules on startup
 - added support for preferred modules same as in 2.x branch
