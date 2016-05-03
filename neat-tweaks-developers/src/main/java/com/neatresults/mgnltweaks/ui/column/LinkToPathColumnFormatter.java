@@ -119,6 +119,9 @@ public class LinkToPathColumnFormatter extends AbstractColumnFormatter<ColumnDef
                 } else if ("id".equals(propName)) {
                     String title = path;
                     String[] parts = path.split(":");
+                    if (parts.length != 2) {
+                        return path;
+                    }
                     path = "/modules/" + parts[0] + "/templates/" + parts[1];
                     return createLinkButton(title, "config", path);
                 } else if ("extends".equals(propName)) {
