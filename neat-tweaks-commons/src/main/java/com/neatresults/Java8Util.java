@@ -15,7 +15,7 @@ import javax.jcr.RepositoryException;
 /**
  * Some utils for making life w/ java 8 easier.
  */
-public class Java8Util {
+public final class Java8Util {
 
     private Java8Util() {
     }
@@ -32,14 +32,23 @@ public class Java8Util {
         return stream;
     }
 
+    /**
+     * Turns a PropertyIterator into Property stream.
+     */
     public static Stream<Property> asPropertyStream(PropertyIterator properties) {
         return asStream(properties);
     }
 
+    /**
+     * Turns a NodeIterator into Node stream.
+     */
     public static Stream<Node> asNodeStream(NodeIterator nodes) {
         return asStream(nodes);
     }
 
+    /**
+     * Returns name of the Property or null when property can't be accessed.
+     */
     public static String getName(Property p) {
         try {
             return p.getName();
@@ -48,9 +57,34 @@ public class Java8Util {
         }
     }
 
+    /**
+     * Returns name of the Node or null when node can't be accessed.
+     */
     public static String getName(Node n) {
         try {
             return n.getName();
+        } catch (RepositoryException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Returns path of the Node or null when node can't be accessed.
+     */
+    public static String getPath(Node n) {
+        try {
+            return n.getPath();
+        } catch (RepositoryException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Returns path of the Property or null when property can't be accessed.
+     */
+    public static String getPath(Property p) {
+        try {
+            return p.getPath();
         } catch (RepositoryException e) {
             return null;
         }
