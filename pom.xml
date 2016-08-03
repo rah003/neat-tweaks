@@ -76,12 +76,6 @@
         <scope>import</scope>
       </dependency>
 
-      <!--dependency>
-        <groupId>info.magnolia</groupId>
-        <artifactId>magnolia-module-standard-templating-kit</artifactId>
-        <version>${stkVersion}</version>
-        <scope>provided</scope>
-      </dependency-->
       <dependency>
         <groupId>info.magnolia</groupId>
         <artifactId>magnolia-module-scheduler</artifactId>
